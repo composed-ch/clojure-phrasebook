@@ -71,7 +71,7 @@ Define and call a function that calculates the hypotenuse of a right-angled tria
 Define a function `circumference` that computes the circumference of a rectangle
 given its sides `a` and `b`.
 
-Hint: Use the formula `2(ab)`.
+Hint: Use the formula `2ab`.
 
 Test: `(circumference 3 4)` shall return `14`.
 
@@ -82,3 +82,13 @@ Define a function that computes the area of a circle given its radius `r`.
 Hint: Use the constant `Math/PI` and the formula `πr²`.
 
 Test: `(area 2)` shall return `12.566370614359172`.
+
+### Minutes and Seconds
+
+Write a function `min-sec` that formats a given number of seconds to a string
+of the format `xmys`, with `x` being the number of minutes and `y` the number
+of (remaining) seconds.
+
+Hint: Use the `quot` and `mod` functions for the calculations.
+
+Test: `(min-sec 3578)` shall return `59m38s`.
