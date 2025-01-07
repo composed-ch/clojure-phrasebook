@@ -92,17 +92,3 @@ of (remaining) seconds.
 Hint: Use the `quot` and `mod` functions for the calculations.
 
 Test: `(min-sec 3578)` shall return `59m38s`.
-
-### Arcseconds and Arcminutes
-
-Write a function `arc-min-sec` that calculates the arc minutes and arc seconds
-of an angle given in radian and formats it as `x°y'z"`, with `x` being the
-number of degrees, `y` the number of arcminutes, and `z` the number of
-arcseconds.
-
-Hint: Write and use a helper function `degree` that converts the angle from
-radian `r` to degree using the formula `180r/π`. Apply the `int` function to
-truncate decimal places. Escape the `"` character in a string using the syntax
-`"\""`.
-
-Test: `(arc-min-sec ??)` shall return `?°?'?"`.
