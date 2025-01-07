@@ -63,3 +63,18 @@ Define and call a function that calculates the hypotenuse of a right-angled tria
   (Math/sqrt (+ (Math/pow a 2) (Math/pow b 2))))
 (hypotenuse 3 4) ; 5.0
 ```
+
+## Exercises
+
+### Circumference of a Rectangle
+
+Define a function that computes the circumference of a rectangle given its sides
+`a` and `b`.
+
+Hint: Use the formula `2(ab)`.
+
+### Area of a Circle
+
+Define a function that computes the area of a circle given its radius `r`.
+
+Hint: Use the constant `Math/PI` and the formula `πr²`.
