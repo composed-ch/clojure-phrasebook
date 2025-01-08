@@ -163,6 +163,7 @@ Given the following vector:
 Write an expression that appends the elements `0`, `1`, and `2` to the front,
 and the element `9` to the end.
 
-Hint: Use the `cons` and `conj` functions.
+Hint: Use the `cons` and `conj` functions. Unlike `cons`, `conj` returns a
+vector.
 
 Test: The sequence `(0 1 2 3 4 5 6 7 8 9)` is returned.
