@@ -120,3 +120,49 @@ Extend a list:
 
 Applied to a list, both `conj` and `cons` add new elements to the front for
 better efficiency.
+
+## Exercises
+
+### Accessing Elements
+
+Given the following vector:
+
+```clojure
+(def numbers [1 2 [3 [4 5 6 [7 8] 9]]])
+```
+
+Write an expression that returns the element `8`.
+
+Hint: Use the `first` and `rest` functions.
+
+Test: The element `8` is returned.
+
+### Extending a List
+
+Given the following list:
+
+```clojure
+(def numbers '(3 4 5 6 7 8 9))
+```
+
+Write an expression that appends the elements `0`, `1`, and `2` to the front of
+the list. 
+
+Hint: Use the `cons` function.
+
+Test: The sequence `(0 1 2 3 4 5 6 7 8 9)` is returned.
+
+### Extending a List
+
+Given the following vector:
+
+```clojure
+(def numbers [3 4 5 6 7 8])
+```
+
+Write an expression that appends the elements `0`, `1`, and `2` to the front,
+and the element `9` to the end.
+
+Hint: Use the `cons` and `conj` functions.
+
+Test: The sequence `(0 1 2 3 4 5 6 7 8 9)` is returned.
