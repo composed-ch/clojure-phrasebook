@@ -66,7 +66,8 @@ Add an element to the end of a vector:
 
 ```clojure
 (def songs ["Pale Fire" "The Eleventh Hour" "One"])
-(conj songs "Monument") ; ["Pale Fire" "The Eleventh Hour" "One" "Monument"]
+(conj songs "Monument")
+;; ["Pale Fire" "The Eleventh Hour" "One" "Monument"]
 ```
 
 The original vector is _not_ modified, but a new, larger vector is created,

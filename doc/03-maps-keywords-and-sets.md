@@ -35,7 +35,9 @@ If the key is not found, `nil` is returned:
 Use _keywords_ instead of strings as map keys:
 
 ```clojure
-(def song {:title "Pale Fire" :artist "Fates Warning" :duration "4m17s"})
+(def song {:title "Pale Fire"
+           :artist "Fates Warning"
+           :duration "4m17s"})
 (get song :title) ; "Pale Fire"
 (song :title) ; "Pale Fire"
 ```
@@ -50,24 +52,29 @@ Add a new entry (key-value pair) to a map:
 
 ```clojure
 (assoc song :album "Inside Out")
+;; {:title "Pale Fire", :artist "Fates Warning",
+    :duration "4m17s", :album "Inside Out"}
 ```
 
 Add multiple new entries to a map:
 
 ```clojure
 (assoc song :album "Inside Out" :year 1994)
+;; {:title "Pale Fire", :artist "Fates Warning",
+    :duration "4m17s", :album "Inside Out", :year 1994}
 ```
 
 Remove entries from a map:
 
 ```clojure
-(dissoc song :artist :duration)
+(dissoc song :artist :duration) ; {:title "Pale Fire"}
 ```
 
 Non-existant keys are ignored silently:
 
 ```clojure
 (dissoc song :artist :duration :genre :top-chart-position)
+;; {:title "Pale Fire"}
 ```
 
 Retrieve all the keys and values, respectively, from a map:
@@ -118,13 +125,13 @@ Lookup of keywords like a function:
 Extend a set:
 
 ```clojure
-(conj genres :classic)
+(conj genres :classic) ; #{:metal :pop :electro :classic}
 ```
 
 Remove a value from a set:
 
 ```clojure
-(disj genres :pop)
+(disj genres :pop) ; #{:metal :electro}
 ```
 
 ## Exercises
