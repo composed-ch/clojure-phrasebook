@@ -126,3 +126,55 @@ Remove a value from a set:
 ```clojure
 (disj genres :pop)
 ```
+
+## Exercises
+
+### Change a Map
+
+Given the following map:
+
+```clojure
+(def server {:name "Persephone" :uptime "13d7h5m43s" :active false})
+```
+
+Write an expression to remove the `:uptime` key (with its value) from the map,
+to update the `:active` value to `false` in the map, and to add the key
+`:decommissioned` with the value `2025` to the map.
+
+Hint: Use the `assoc` function to alter and add a key-value pair, and the `disj`
+function to remove a key-value pair.
+
+Test: The map `{:name "Persephone" :active false :decommissioned 2025}` is returned.
+
+### Change a Set
+
+Given the following set:
+
+```clojure
+(def members #{"Steve" "Dave" "Adrian" "Bruce" "Nicko"})
+```
+
+Write an expression to remove the value `"Adrian"` from the set, and to add the
+value `"Janick"` to the set.
+
+Hint: Use the `disj` function to remove a value, and the `conj` function to add
+a value.
+
+Test: The set `{"Steve" "Dave" "Bruce" "Nicko" "Janick"}` is returned.
+
+### Combine Maps and Sets
+
+Given the following map and set:
+
+```clojure
+(def guitarists #{"Dave" "Adrian" "Janick"})
+(def song {:title "Paschendale" :duration "8m28s"})
+```
+
+Write an expression which first adds the `guitarists` set with the key `:solos`
+to the `song` map, and then retrieves the `:solos` set again from the map,
+thereby removing the value `"Janick"` from the set.
+
+Hint: Use the `assoc` and `disj` functions.
+
+Test: The set `{"Dave" "Adrian"}` is returned.
