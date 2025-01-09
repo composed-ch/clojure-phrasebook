@@ -1,5 +1,5 @@
 DOC_PARAMS=-N --toc -s
-TEX_PARAMS=--pdf-engine=xelatex -V fontsize=12pt -V documentclass=scrartcl -V papersize=a4
+TEX_PARAMS=--pdf-engine=xelatex -V fontsize=11pt -V documentclass=scrartcl -V papersize=a4
 FONTS=-V mainfont="Bitter" -V sansfont="Lato" -V monofont="Noto Sans Mono"
 DATE=-V date="`date +'%Y-%m-%d'`"
 
