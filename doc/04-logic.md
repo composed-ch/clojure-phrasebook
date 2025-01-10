@@ -1,6 +1,88 @@
 # Logic
 
-TODO
+Execute code conditionally:
+
+```clojure
+(def active true)
+(if active
+  (println "active")) ; "active"
+```
+
+Run alternative code if a condition fails:
+
+```clojure
+(def active false)
+(if active
+  (println "active")
+  (println "inactive")) ; "inactive"
+```
+
+Use `if` as an expression:
+
+```clojure
+(def active true)
+(if active
+  "active"
+  "inactive") ; "active"
+```
+
+An `if` expression with no else branch returns `nil` if the condition fails:
+
+```clojure
+(def active false)
+(if active "active") ; nil
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
+
+```clojure
+```
 
 ## Exercises
 
