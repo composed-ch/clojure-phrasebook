@@ -5,7 +5,8 @@ DATE=-V date="`date +'%Y-%m-%d'`"
 
 .PHONY: all clean
 
-all: clojure-phrasebook.pdf clojure-phrasebook.html clojure-phrasebook.epub
+all: clojure-phrasebook.pdf clojure-phrasebook.html clojure-phrasebook.epub \
+	clojure-phrasebook.docx clojure-phrasebook.odt clojure-phrasebook.7
 
 clojure-phrasebook.pdf: *.md
 	pandoc $(DOC_PARAMS) $(TEX_PARAMS) $(FONTS) $(DATE) $^ -o $@
@@ -16,5 +17,15 @@ clojure-phrasebook.html: *.md
 clojure-phrasebook.epub: *.md
 	pandoc $(DOC_PARAMS) $(DATE) $^ -o $@
 
+clojure-phrasebook.docx: *.md
+	pandoc $(DOC_PARAMS) $(DATE) $^ -o $@
+
+clojure-phrasebook.odt: *.md
+	pandoc $(DOC_PARAMS) $(DATE) $^ -o $@
+
+clojure-phrasebook.7: *.md
+	pandoc -t man -V section=7 $(DOC_PARAMS) $(DATE) $^ -o $@
+
 clean:
-	rm -f clojure-phrasebook.pdf clojure-phrasebook.html clojure-phrasebook.epub
+	rm -f clojure-phrasebook.pdf clojure-phrasebook.html clojure-phrasebook.epub \
+		clojure-phrasebook.docx clojure-phrasebook.odt clojure-phrasebook.7
