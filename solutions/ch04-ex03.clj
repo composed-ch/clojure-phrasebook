@@ -8,3 +8,4 @@
      (/ (- (- b) (Math/sqrt (discriminant a b c))) (* 2 a))]
     (< (discriminant a b c) 0) []
     :else [(/ (- b) (* 2 a))]))
+
