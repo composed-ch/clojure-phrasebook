@@ -234,9 +234,11 @@ Write a function `quadratic` that accepts parameters `a`, `b`, and `c`, and
 returns the solutions to equations of the form `ax²+bx+c=0` using the quadratic
 formula. The function shall return a vector of zero, one, or two elements.
 
-Hint: Use `cond` and write a helper function `discriminant`.
+Hint: Use `cond` and write a helper function `discriminant`. To turn `x` into a
+negative number, write `(- x)`. Use `:else` instead of a floating point
+comparison against `0.0`.
 
-Test: `(quadratic 1 -4 3)` shall return `[1 3]`, `(quadratic 1 2 1)` shall
+Test: `(quadratic 1 -4 3)` shall return `[3.0 1.0]`, `(quadratic 1 2 1)` shall
 return `[-1]`, and `(quadratic 1 4 5)` shall return `[]`.
 
 ### State Machine
