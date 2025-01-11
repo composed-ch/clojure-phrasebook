@@ -53,7 +53,7 @@ Add a new entry (key-value pair) to a map:
 ```clojure
 (assoc song :album "Inside Out")
 ;; {:title "Pale Fire", :artist "Fates Warning",
-    :duration "4m17s", :album "Inside Out"}
+;;  :duration "4m17s", :album "Inside Out"}
 ```
 
 Add multiple new entries to a map:
@@ -61,7 +61,7 @@ Add multiple new entries to a map:
 ```clojure
 (assoc song :album "Inside Out" :year 1994)
 ;; {:title "Pale Fire", :artist "Fates Warning",
-    :duration "4m17s", :album "Inside Out", :year 1994}
+;;  :duration "4m17s", :album "Inside Out", :year 1994}
 ```
 
 Remove entries from a map:

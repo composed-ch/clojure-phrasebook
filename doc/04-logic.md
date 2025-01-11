@@ -172,7 +172,8 @@ Catch an exception:
     (catch ArithmeticException e (str "division failed" e))))
 
 (divide 10 5) ; 2
-(divide 10 0) ; "division failedjava.lang.ArithmeticException: Divide by zero"
+(divide 10 0)
+;; "division failedjava.lang.ArithmeticException: Divide by zero"
 ```
 
 Throw an exception:
