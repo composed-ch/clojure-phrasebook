@@ -202,37 +202,71 @@ Exceptions thrown by `ex-info` can be caught as `clojure.llang.ExceptionInfo`:
 
 ## Exercises
 
-- if
-    - write a function `range-check [x a b]`
-    - check if a number within a given range
-    - return `x in [a;b]` or `x not in [a;b]` as string
-    - either use single operator `(<= a x b)` or a logical operator `(and (>= x a) (<= x b))`
-- when
-    - write a function `safe-divide [x y]`
-    - safe divide (only divide if not by zero)
-    - otherwise `nil` is returned
-- cond
-    - quadratic formula: `quadratic [a b c]` returning `[x1 x2]`, `[x1]`, or `[]` depending on the determinant
-    - helper function: `discriminant [a b c]`
-- case
-    - implement a state machine `next-editor-state [state action]`
-    - actions
-        - edit
-        - save
-    - states
-        - clean unsaved
-            - edit: dirty unsaved
-            - save: clean saved
-        - dirty unsaved
-            - edit: [same]
-            - save: clean saved
-        - clean saved
-            - edit: dirty saved
-            - save: [same]
-        - dirty saved
-            - edit: [same]
-            - save: clean saved
-- try/catch/throw
-    - write a function `parse-number [input]`
-    - Integer/parseInt with NumberFormatException
-    - throw own exception if number cannot be parsed
+### Range Check
+
+Write a function `in-range?` that returns `true` when the argument `x` is within
+the interval of parameters `a` (lower limit) and `b` (upper limit), and `false`
+otherwise.
+
+Hint: Use two conditions in conjunction—or a comparison operator using three
+operands.
+
+Test: `(in-range? 3 1 5)` shall return `true`, `(in-range 17 1 10)` shall return
+`false`.
+
+### Pythagorean Triplet
+
+Write a function `pythagorean-triplet` that accepts three numbers `a`, `b`, and
+`c`. If the condition `a²+b²=c²` holds true for the arguments provided, the
+string `a²+b²=c²` shall be returned, with `a`, `b`, and `c` replaced by their
+actual values. If the condition does not hold, the string `a²+b²≠c²` shall be
+returned with the according replacements.
+
+Hint: Use `Math/pow` to compute the exponents, and `str` to concatenate the
+return value.
+
+Test: `(pythagorean-triplet 3 4 5)` shall return `3²+4²=5²`, and
+`(pythagorean-triplet 1 2 3)` shall return `1²+2²≠3²`.
+
+### Quadratic Formula
+
+Write a function `quadratic` that accepts parameters `a`, `b`, and `c`, and
+returns the solutions to equations of the form `ax²+bx+c=0` using the quadratic
+formula. The function shall return a vector of zero, one, or two elements.
+
+Hint: Use `cond` and write a helper function `discriminant`.
+
+Test: `(quadratic 1 -4 3)` shall return `[1 3]`, `(quadratic 1 2 1)` shall
+return `[-1]`, and `(quadratic 1 4 5)` shall return `[]`.
+
+### State Machine
+
+Write a function `next-editor-state` that accepts two parameters `state`
+(`:clean-unsaved`, `:dirty-unsaved`, `:clean-saved`, `:dirty-saved`) and
+`action` (`:edit`, `:save`), and returns the new state based on the following
+transitions:
+
+- A _clean unsaved_ state becomes _dirty unsaved_ when edited and _clean saved_
+  when saved.
+- A _dirty unsaved_ state remains when edited and becomes _clean saved_ when
+  saved.
+- A _clean saved_ state becomes _dirty saved_ when edited and remains when
+  saved.
+- A _dirty saved_ state remains when edited and becomes _clean saved_ when
+  saved.
+
+Hint: Use nested `case` checks.
+
+Test: `(next-editor-state :dirty-unsaved :save)` returns `:clean-saved`, etc.
+
+### Number Parsing
+
+Write a function `parse-number` that accepts a string parameter `input` which
+shall be parsed as an integer to be returned.
+
+Hint: Use `Integer/parseInt` to parse the number. Catch a possible
+`NumberFormatException`, in which case a new exception is to be thrown using
+`ex-info`.
+
+Test: `(parse-number "13")` shall return 13, and `(parse-number "foo")` shall
+throw an exception.
