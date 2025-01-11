@@ -68,7 +68,7 @@ Define and call a function that calculates the hypotenuse of a right-angled tria
 
 ### Circumference of a Rectangle
 
-Define a function `circumference` that computes the circumference of a rectangle
+Write a function `circumference` that computes the circumference of a rectangle
 given its sides `a` and `b`.
 
 Hint: Use the formula `2ab`.
@@ -77,7 +77,7 @@ Test: `(circumference 3 4)` shall return `14`.
 
 ### Area of a Circle
 
-Define a function that computes the area of a circle given its radius `r`.
+Write a function that computes the area of a circle given its radius `r`.
 
 Hint: Use the constant `Math/PI` and the formula `πr²`.
 
