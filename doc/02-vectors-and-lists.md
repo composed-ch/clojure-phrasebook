@@ -153,7 +153,7 @@ Hint: Use the `cons` function.
 
 Test: The sequence `(0 1 2 3 4 5 6 7 8 9)` is returned.
 
-### Extending a List
+### Extending a Vector
 
 Given the following vector:
 
