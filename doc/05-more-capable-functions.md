@@ -151,3 +151,97 @@ conditions_, respectively:
 
 The return value is available as `%` in the post condition.
 
+## Exercises
+
+### Acceleration and Speed
+
+Write a multi-arity function `end-speed` to compute the speed given an
+acceleration `a` in `m/s²`, a time indication `t` in `s`, and—optionally—a
+starting speed `v0` in `m/s`.
+
+Hint: Use the formula `v=v0+at`. The lower-arity function shall call the
+higher-arity function. Document the function with the formula in a docstring.
+
+Test: `(end-speed [2 10])` shall return `20`, and `(end-speed [2 10 7.5])` shall
+return `27.5`.
+
+### Property Summation
+
+Given the following maps of personal financial data:
+
+```clojure
+(def jack {:income 4500 :balance 12942 :debt 120000})
+(def jill {:income 3200 :balance 19172 :debt 250000})
+(def jane {:income 4900 :balance 10342 :debt 100000})
+```
+
+Write a function `(sum-by [prop & args])` that sums up the given property `prop`
+in the provided data. Document the function using a docstring.
+
+Hint: Return 0 if the property isn't found in the data, or of no arguments are
+provided.
+
+Test: `(sum-by :income jack jill)` shall return `7700`, and `(sum-by :debt jack
+jill jane)` shall return `470000`.
+
+### Bonus Calculation
+
+Given the following payroll data:
+
+```clojure
+(def dilbert {:salary 120000 :position "Engineer"})
+(def wally {:salary 90000 :position "Engineer"})
+(def topper {:salary 150000 :position "Sales" :revenue 2750000})
+(def ashok {:salary 36000 :position "Intern"})
+```
+
+Write a multimethod `bonus` that calculates each employee's bonus based on the
+following rules:
+
+1. Engineers earning more than `100000` get a bonus of 10% of their salary.
+   Engineers earning up to `100000` get a bonus of 15% of their salary.
+2. Sales people get a bonus of 10% of their salary and 1% of their revenue.
+3. Interns get a fixed bonus of `2000`.
+
+Hint: The `dispatch` function shall differentiate between low- and high-earning
+engineers.
+
+Test: `(bonus dilbert)` shall return `12000`, `(bonus wally)` shall return
+`13500`, `(bonus topper)` shall return `42500`, and `(bonus ashok)` shall return
+`2000`.
+
+### Fibonacci Numbers
+
+Write a tail-recursive function `(fib [n])` that computes the nth Fibonacci
+number.
+
+Hint: The nth Fibonacci number is defined as the sum of its two predecessors.
+The first two Fibonacci numbers are `1` and `1`. Use `loop` and `recur` to
+implement the function.
+
+Test: `(fib 0)` and `(fib 1)` shall return 1, `(fib 10)` shall return `89`.
+
+### Blob Merging
+
+Given the following data:
+
+```clojure
+(def red {:weight 80 :strength 50})
+(def blue {:weight 90 :strength 40})
+(def green {:weight 70 :strength 35})
+(def black {:weight 0 :strength 0})
+```
+
+Write a function `(merge-blobs [a b])` which simulates a fight between the two
+blobs `a` and `b`. The blob with the higher strength eats up the blog with the
+lower strength, thereby gaining the defeated blob's weight and 10% of its
+strength. Test for the following conditions:
+
+- Pre conditions: Both blobs have a positive weight and strength.
+- Post condition: The returned weight is higher than the weight of any given
+  blob.
+
+Hint: Use `:pre` and `:post` to enforce the conditions.
+
+Test: `(merge-blobs red blue)` shall return `{:weight 170 :strength 54}`, and
+`(merge-blobs green black)` shall throw an assertion error.
