@@ -157,12 +157,13 @@ The return value is available as `%` in the post condition.
 
 Write a multi-arity function `end-speed` to compute the speed given an
 acceleration `a` in `m/s²`, a time indication `t` in `s`, and—optionally—a
-starting speed `v0` in `m/s`.
+starting speed `v0` in `m/s`. Document the function with the formula in a
+docstring.
 
 Hint: Use the formula `v=v0+at`. The lower-arity function shall call the
-higher-arity function. Document the function with the formula in a docstring.
+higher-arity function.
 
-Test: `(end-speed [2 10])` shall return `20`, and `(end-speed [2 10 7.5])` shall
+Test: `(end-speed 2 10)` shall return `20`, and `(end-speed 2 10 7.5)` shall
 return `27.5`.
 
 ### Property Summation
@@ -175,11 +176,11 @@ Given the following maps of personal financial data:
 (def jane {:income 4900 :balance 10342 :debt 100000})
 ```
 
-Write a function `(sum-by [prop & args])` that sums up the given property `prop`
-in the provided data. Document the function using a docstring.
+Write a recursive function `(sum-by [prop & args])` that sums up the given
+property `prop` in the provided data. Document the function using a docstring.
 
 Hint: Return 0 if the property isn't found in the data, or of no arguments are
-provided.
+provided. Use `apply` for the recursive call.
 
 Test: `(sum-by :income jack jill)` shall return `7700`, and `(sum-by :debt jack
 jill jane)` shall return `470000`.
@@ -193,6 +194,7 @@ Given the following payroll data:
 (def wally {:salary 90000 :position "Engineer"})
 (def topper {:salary 150000 :position "Sales" :revenue 2750000})
 (def ashok {:salary 36000 :position "Intern"})
+(def boss {:salary 500000 :position "Manager"})
 ```
 
 Write a multimethod `bonus` that calculates each employee's bonus based on the
@@ -202,13 +204,15 @@ following rules:
    Engineers earning up to `100000` get a bonus of 15% of their salary.
 2. Sales people get a bonus of 10% of their salary and 1% of their revenue.
 3. Interns get a fixed bonus of `2000`.
+4. All other employees get a bonus of `0`.
 
 Hint: The `dispatch` function shall differentiate between low- and high-earning
-engineers.
+engineers. Do not explicitly return `:default` from the dispatch method for all
+other employees.
 
-Test: `(bonus dilbert)` shall return `12000`, `(bonus wally)` shall return
-`13500`, `(bonus topper)` shall return `42500`, and `(bonus ashok)` shall return
-`2000`.
+Test: `(bonus dilbert)` shall return `12000.0`, `(bonus wally)` shall return
+`13500.0`, `(bonus topper)` shall return `42500.0`, and `(bonus ashok)` shall
+return `2000.0`
 
 ### Fibonacci Numbers
 
@@ -219,9 +223,11 @@ Hint: The nth Fibonacci number is defined as the sum of its two predecessors.
 The first two Fibonacci numbers are `1` and `1`. Use `loop` and `recur` to
 implement the function.
 
-Test: `(fib 0)` and `(fib 1)` shall return 1, `(fib 10)` shall return `89`.
+Test: `(fib 0)` and `(fib 1)` shall return `1`, `(fib 10)` shall return `89`,
+and `(fib 45)` shall return `1836311903`—and finish within within milliseconds
+(use `(time (fib 45))` to check).
 
-### Blob Merging
+### Blob Eats Blob
 
 Given the following data:
 
@@ -237,8 +243,8 @@ blobs `a` and `b`. The blob with the higher strength eats up the blog with the
 lower strength, thereby gaining the defeated blob's weight and 10% of its
 strength. Test for the following conditions:
 
-- Pre conditions: Both blobs have a positive weight and strength.
-- Post condition: The returned weight is higher than the weight of any given
+- Preconditions: Both blobs have a positive weight and strength.
+- Postcondition: The returned weight is higher than the weight of any given
   blob.
 
 Hint: Use `:pre` and `:post` to enforce the conditions.
