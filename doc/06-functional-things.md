@@ -56,6 +56,11 @@ Apply a function _partially_:
 Create a complement function, which negates a predicate:
 
 ```clojure
+(defn old? (< (:year album) 1990))
+(def new? (complement old?))
+
+(old? thriller) ; true
+(new? thriller) ; false
 ```
 
 Combine multiple predicate functions:
@@ -82,4 +87,15 @@ Combine multiple predicate functions (using _and_ logic):
 (new-priest-metal? vengeance) ; false
 ```
 
-TODO: function literals with single and multiple parameters
+Use a _function literal_ or _lambda_:
+
+```clojure
+(#(Math/sqrt (+ (Math/pow %1 2) (Math/pow %2 2))) 3 4) ; 5.0
+```
+
+Instead of named parameters, function literals use numbered parameters `%1`,
+`%2`, etc. If only a single parameter is used, it can be abbreviated as `%`:
+
+```clojure
+(#(* % 2) 13) ; 26
+```
