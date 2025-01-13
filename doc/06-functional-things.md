@@ -111,15 +111,21 @@ Instead of named parameters, function literals use numbered parameters `%1`,
 - fill in predicate parameter using `partial` (genre, year, band) to return
   parametrized predicate functions
 
-### Lambda Predicate Functions
+### Volume Functions
 
-- rewrite `fn` functions as lambdas
+- Write a function `cuboid-volume` that calculates the volume of a cuboid given
+  its side lengths `a` and `b` as well as a height `h`. Apply the function
+  partially to fill in the parameters `a` and `b`. Use the partially applied
+  function to calculate volumes given different heights.
 
-### Calculator
+### Number Transformations
 
-- write a function that accepts calculator operations and uses `apply` to
-  perform them on its args
+- Write a function called `transform` that accepts a vector of single argument
+  function literals that transform a given initial number. Use `apply` to run
+  the functions. Write a tail-recursive function that applies the functions in
+  the vector one by one.
 
 ### Map Update Function
 
-- `update` a map field (decrement stock, increment revenue)
+- `update` a map field (item map, decrement `:stock`, increment `:revenue` by
+  `:price`)
