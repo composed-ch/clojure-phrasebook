@@ -99,3 +99,27 @@ Instead of named parameters, function literals use numbered parameters `%1`,
 ```clojure
 (#(* % 2) 13) ; 26
 ```
+
+## Exercises
+
+### Combining and Complementing Predicate Functions
+
+- write and combine predicats using `every-pred` and `complement`
+
+### Parametrized Predicate Functions
+
+- fill in predicate parameter using `partial` (genre, year, band) to return
+  parametrized predicate functions
+
+### Lambda Predicate Functions
+
+- rewrite `fn` functions as lambdas
+
+### Calculator
+
+- write a function that accepts calculator operations and uses `apply` to
+  perform them on its args
+
+### Map Update Function
+
+- `update` a map field (decrement stock, increment revenue)
