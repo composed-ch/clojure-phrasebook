@@ -28,7 +28,7 @@ Return a function from a function:
   (fn [album] (and (a? album) (b? album))))
 
 ((both? old? metal?) painkiller) ; false
-(both? old? metal?) vengeance) ; true
+((both? old? metal?) vengeance) ; true
 ```
 
 In fact, `defn` is a shortcut of `def` and `fn`.
@@ -107,10 +107,14 @@ Instead of named parameters, function literals use numbered parameters `%1`,
 Given the following country data:
 
 ```clojure
-(def fr {:name "France" :population 68373433 :hdi 0.91 :gdp 4.359e12})
-(def it {:name "Italy" :population 58968501 :hdi 0.906 :gdp 2.376e12})
-(def ng {:name "Nigeria" :population 230842743 :hdi 0.548 :gdp 0.252738e12})
-(def bd {:name "Bangladesh" :population 174655977 :hdi 0.670 :gdp 1.801e12})
+(def fr {:name "France" :population 68373433
+         :hdi 0.91 :gdp 4.359e12})
+(def it {:name "Italy" :population 58968501
+         :hdi 0.906 :gdp 2.376e12})
+(def ng {:name "Nigeria" :population 230842743
+         :hdi 0.548 :gdp 0.252738e12})
+(def bd {:name "Bangladesh" :population 174655977
+         :hdi 0.670 :gdp 1.801e12})
 ```
 
 Write the following predicate functions:
