@@ -158,7 +158,8 @@ predicate functions return a predicate function:
   correspondng to `developed?`.
 
 Hint: The outer function accepts a threshold parameter, and the inner, returned
-function accepts a country parameter.
+function accepts a country parameter. The `first-world?` predicate provides the
+actual arguments to create the predicates.
 
 Test: Same as before.
 
