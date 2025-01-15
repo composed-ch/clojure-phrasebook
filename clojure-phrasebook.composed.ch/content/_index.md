@@ -8,5 +8,9 @@ with exercises. A basic understanding of functional programming concepts
 (lambdas, lexical scoping, immutability) is required. No setup instructions are
 provided (yet).
 
-Send me an [e-mail](mailto:patrick.bucher@composed.ch?subject=Clojure%20Phrasebook) if you find any mistakes or if you have any suggestions on how to
-improve the page.
+Send me an
+[e-mail](mailto:patrick.bucher@composed.ch?subject=Clojure%20Phrasebook) if you
+find any mistakes or if you have any suggestions on how to improve the page.
+
+This site is developed, maintained, and run by
+[Composed](https://www.composed.ch)—a software company based in Switzerland.

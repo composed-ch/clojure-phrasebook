@@ -1,7 +1,24 @@
 baseURL = 'https://clojure-phrasebook.composed.ch'
 languageCode = 'en-us'
-title = 'Clojure Phrasebook'
+title = 'clj-phrsbk'
+
+[minify]
+minifyOutput = true
+
+[params]
+math = false
+openapi = false
+showVisitedLinks = true
+
+[params.author]
+name = 'Patrick Bucher, Composed GmbH'
+
+[[params.themeVariant]]
+identifier = 'relearn-light'
+
+[[params.themeVariant]]
+identifier = 'relearn-dark'
 
 [module]
-  [[module.imports]]
-    path = 'github.com/McShelby/hugo-theme-relearn'
+[[module.imports]]
+path = 'github.com/McShelby/hugo-theme-relearn'
