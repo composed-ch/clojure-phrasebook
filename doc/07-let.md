@@ -78,3 +78,18 @@ If returning `nil` in the alternative case is sufficient, use `when-let`:
 (handout :bob) ; "You get a hat."
 (handout :chaim) ; nil
 ```
+
+## Exercises
+
+### Formatting Durations
+
+Write a function `format-duration` that, given a duration in seconds, returns a
+string of the following format: `XhYmZs`, with `X` indicating hours, `Y`
+indicating minutes, and `Z` indicating seconds.
+
+Hint: Use `quot` and `mod` for the calculation and `let` for bindings. Omit any
+indications equal to `0` (e.g. `5m13s` or `1h30m` instead of `0h5m13s` or
+`1h30m0s`, respectively).
+
+Test: `(format-duration 4321)` shall return `1h12m1s`, `(format-duration 3600)`
+shall return `1h`, and `(format-duration 62)` shall return `1m2s`.
