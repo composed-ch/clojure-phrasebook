@@ -81,6 +81,15 @@ If returning `nil` in the alternative case is sufficient, use `when-let`:
 
 ## Exercises
 
+### Temporary Values
+
+Rewrite the solution for exercise _Map Update Function_ from the last chapter
+with `let` bindings so that the code becomes more readable.
+
+Hint: Bind the result of each `update` operation to a new variable.
+
+Test: Same as in original exercise.
+
 ### Formatting Durations
 
 Write a function `format-duration` that, given a duration in seconds, returns a
@@ -93,3 +102,14 @@ indications equal to `0` (e.g. `5m13s` or `1h30m` instead of `0h5m13s` or
 
 Test: `(format-duration 4321)` shall return `1h12m1s`, `(format-duration 3600)`
 shall return `1h`, and `(format-duration 62)` shall return `1m2s`.
+
+### Arcminutes and Arcseconds
+
+Write a function `print-angle` that expects a decimal angle in degrees, e.g.
+`32.8451` and converts the decimal portion to arcminutes and arcseconds (i.e.
+`1/60` and `1/36000` parts of a whole degree). Print the angle formatted as
+`x°y'z"`.
+
+Hint: Consider the hints from the last exercise.
+
+Test: `(arc-min-sec 32.8451)` shall return `32°50'42"`.
