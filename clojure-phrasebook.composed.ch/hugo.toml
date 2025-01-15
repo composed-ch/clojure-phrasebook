@@ -9,15 +9,10 @@ minifyOutput = true
 math = false
 openapi = false
 showVisitedLinks = true
+themeVariant = 'blue'
 
 [params.author]
 name = 'Patrick Bucher, Composed GmbH'
-
-[[params.themeVariant]]
-identifier = 'relearn-light'
-
-[[params.themeVariant]]
-identifier = 'relearn-dark'
 
 [module]
 [[module.imports]]
