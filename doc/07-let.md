@@ -112,4 +112,4 @@ Write a function `print-angle` that expects a decimal angle in degrees, e.g.
 
 Hint: Consider the hints from the last exercise.
 
-Test: `(print-angle 32.8451)` shall return `32°50'42"`.
+Test: `(print-angle 32.8451)` shall print `32°50'42"`.
