@@ -1,6 +1,6 @@
 baseURL = 'https://clojure-phrasebook.composed.ch'
 languageCode = 'en-us'
-title = 'clj-phrsbk'
+title = 'Clojure Phrasebook'
 
 [minify]
 minifyOutput = true

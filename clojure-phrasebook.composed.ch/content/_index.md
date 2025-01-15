@@ -2,7 +2,7 @@
 title = "Clojure Phrasebook"
 +++
 
-The _Clojure Phrasebook_ is a concise summary of [Getting
+The _Clojure Phrasebook_ is a terse summary of [Getting
 Clojure](https://pragprog.com/titles/roclojure/getting-clojure/) by Russ Olsen
 with exercises. A basic understanding of functional programming concepts
 (lambdas, lexical scoping, immutability) is required. No setup instructions are
