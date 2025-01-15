@@ -169,6 +169,15 @@ higher-arity function.
 Test: `(end-speed 2 10)` shall return `20`, and `(end-speed 2 10 7.5)` shall
 return `27.5`.
 
+{{% expand title="Solution" %}}
+```clojure
+(defn end-speed
+  "Calculates the end-speed as v=v0+at."
+  ([a t] (end-speed a t 0))
+  ([a t v0] (+ v0 (* a t))))
+```
+{{% /expand %}}
+
 ### Property Summation
 
 Given the following maps of personal financial data:
@@ -187,6 +196,22 @@ provided. Use `apply` for the recursive call.
 
 Test: `(sum-by :income jack jill)` shall return `7700`, and `(sum-by :debt jack
 jill jane)` shall return `470000`.
+
+{{% expand title="Solution" %}}
+```clojure
+(def jack {:income 4500 :balance 12942 :debt 120000})
+(def jill {:income 3200 :balance 19172 :debt 250000})
+(def jane {:income 4900 :balance 10342 :debt 100000})
+
+(defn sum-by
+  "Sums up the given property in args provided."
+  [prop & args]
+  (cond
+    (empty? args) 0
+    (not (contains? (first args) prop)) 0
+    :else (+ (get (first args) prop) (apply sum-by prop (rest args)))))
+```
+{{% /expand %}}
 
 ### Bonus Calculation
 
@@ -217,6 +242,39 @@ Test: `(bonus dilbert)` shall return `12000.0`, `(bonus wally)` shall return
 `13500.0`, `(bonus topper)` shall return `42500.0`, and `(bonus ashok)` shall
 return `2000.0`
 
+{{% expand title="Solution" %}}
+```clojure
+(def dilbert {:salary 120000 :position "Engineer"})
+(def wally {:salary 90000 :position "Engineer"})
+(def topper {:salary 150000 :position "Sales" :revenue 2750000})
+(def ashok {:salary 36000 :position "Intern"})
+(def boss {:salary 500000 :position "Manager"})
+
+(defn dispatch [employee]
+  (cond
+    (= "Engineer" (:position employee))
+    (if (> (:salary employee) 100000) :engineer-high :engineer-low)
+    (= "Sales" (:position employee)) :sales
+    (= "Intern" (:position employee)) :intern))
+
+(defmulti bonus dispatch)
+
+(defmethod bonus :engineer-high [employee]
+  (* 0.1 (:salary employee)))
+
+(defmethod bonus :engineer-low [employee]
+  (* 0.15 (:salary employee)))
+
+(defmethod bonus :sales [employee]
+  (+ (* 0.1 (:salary employee))
+     (* 0.01 (:revenue employee))))
+
+(defmethod bonus :intern [employee] 2000.0)
+
+(defmethod bonus :default [_] 0.0)
+```
+{{% /expand %}}
+
 ### Fibonacci Numbers
 
 Write a tail-recursive function `(fib [n])` that computes the nth Fibonacci
@@ -229,6 +287,18 @@ implement the function.
 Test: `(fib 0)` and `(fib 1)` shall return `1`, `(fib 10)` shall return `89`,
 and `(fib 45)` shall return `1836311903`—and finish within within milliseconds
 (use `(time (fib 45))` to check).
+
+{{% expand title="Solution" %}}
+```clojure
+(defn fib [n]
+  (loop [a 1
+         b 1
+         i n]
+    (if (= i 0)
+      a
+      (recur b (+ a b) (- i 1)))))
+```
+{{% /expand %}}
 
 ### Blob Eats Blob
 
@@ -254,3 +324,25 @@ Hint: Use `:pre` and `:post` to enforce the conditions.
 
 Test: `(merge-blobs red blue)` shall return `{:weight 170 :strength 54}`, and
 `(merge-blobs green black)` shall throw an assertion error.
+
+{{% expand title="Solution" %}}
+```clojure
+(def red {:weight 80 :strength 50})
+(def blue {:weight 90 :strength 40})
+(def green {:weight 70 :strength 35})
+(def black {:weight 0 :strength 0})
+
+(defn merge-blobs [a b]
+  {:pre [(> (:weight a) 0)
+         (> (:weight b) 0)
+         (> (:strength a) 0)
+         (> (:strength b) 0)]
+   :post [(> (:weight %) (:weight a))
+          (> (:weight %) (:weight b))]}
+  (if (> (:strength a) (:strength b))
+    {:weight (+ (:weight a) (:weight b))
+     :strength (+ (:strength a) (* 0.1 (:strength b)))}
+    {:weight (+ (:weight a) (:weight b))
+     :strength (+ (* 0.1 (:strength b)) (:strength a))}))
+```
+{{% /expand %}}

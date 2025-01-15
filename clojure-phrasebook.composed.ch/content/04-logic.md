@@ -217,6 +217,18 @@ operands.
 Test: `(in-range? 3 1 5)` shall return `true`, `(in-range 17 1 10)` shall return
 `false`.
 
+{{% expand title="Solution" %}}
+```clojure
+;; Solution using a conjunction of two conditions.
+(defn in-range? [x a b]
+  (and (>= x a) (<= x b)))
+
+;; Solution using an operator with three operands.
+(defn in-range? [x a b]
+  (<= a x b))
+```
+{{% /expand %}}
+
 ### Pythagorean Triplet
 
 Write a function `pythagorean-triplet` that accepts three numbers `a`, `b`, and
@@ -231,6 +243,15 @@ return value.
 Test: `(pythagorean-triplet 3 4 5)` shall return `3²+4²=5²`, and
 `(pythagorean-triplet 1 2 3)` shall return `1²+2²≠3²`.
 
+{{% expand title="Solution" %}}
+```clojure
+(defn pythagorean-triplet [a b c]
+  (if (= (+ (Math/pow a 2) (Math/pow b 2)) (Math/pow c 2))
+    (str a "²+" b "²=" c "²")
+    (str a "²+" b "²≠" c "²")))
+```
+{{% /expand %}}
+
 ### Quadratic Formula
 
 Write a function `quadratic` that accepts parameters `a`, `b`, and `c`, and
@@ -243,6 +264,21 @@ comparison against `0.0`.
 
 Test: `(quadratic 1 -4 3)` shall return `[3.0 1.0]`, `(quadratic 1 2 1)` shall
 return `[-1]`, and `(quadratic 1 4 5)` shall return `[]`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn discriminant [a b c]
+  (- (Math/pow b 2) (* 4 a c)))
+
+(defn quadratic [a b c]
+  (cond
+    (> (discriminant a b c) 0)
+    [(/ (+ (- b) (Math/sqrt (discriminant a b c))) (* 2 a))
+     (/ (- (- b) (Math/sqrt (discriminant a b c))) (* 2 a))]
+    (< (discriminant a b c) 0) []
+    :else [(/ (- b) (* 2 a))]))
+```
+{{% /expand %}}
 
 ### State Machine
 
@@ -264,6 +300,29 @@ Hint: Use nested `case` checks.
 
 Test: `(next-editor-state :dirty-unsaved :save)` returns `:clean-saved`, etc.
 
+{{% expand title="Solution" %}}
+```clojure
+(defn next-editor-state [state action]
+  (case state
+    :clean-unsaved
+    (case action
+      :edit :dirty-unsaved
+      :save :clean-saved)
+    :dirty-unsaved
+    (case action
+      :edit :dirty-unsaved
+      :save :clean-saved)
+    :clean-saved
+    (case action
+      :edit :dirty-saved
+      :save :clean-saved)
+    :dirty-saved
+    (case action
+      :edit :dirty-saved
+      :save :clean-saved)))
+```
+{{% /expand %}}
+
 ### Number Parsing
 
 Write a function `parse-number` that accepts a string parameter `input` which
@@ -275,3 +334,14 @@ Hint: Use `Integer/parseInt` to parse the number. Catch a possible
 
 Test: `(parse-number "13")` shall return 13, and `(parse-number "foo")` shall
 throw an exception.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn parse-number [input]
+  (try
+    (Integer/parseInt input)
+    (catch NumberFormatException e
+      (ex-info (str "cannot parse '" input "' as an integer")
+               {:input input}))))
+```
+{{% /expand %}}

@@ -156,6 +156,13 @@ function to remove a key-value pair.
 
 Test: The map `{:name "Persephone" :active false :decommissioned 2025}` is returned.
 
+{{% expand title="Solution" %}}
+```clojure
+(def server {:name "Persephone" :uptime "13d7h5m43s" :active false})
+(assoc (assoc (dissoc server :uptime) :active false) :decommissioned 2025)
+```
+{{% /expand %}}
+
 ### Change a Set
 
 Given the following set:
@@ -171,6 +178,13 @@ Hint: Use the `disj` function to remove a value, and the `conj` function to add
 a value.
 
 Test: The set `{"Steve" "Dave" "Bruce" "Nicko" "Janick"}` is returned.
+
+{{% expand title="Solution" %}}
+```clojure
+(def members #{"Steve" "Dave" "Adrian" "Bruce" "Nicko"})
+(conj (disj members "Adrian") "Janick")
+```
+{{% /expand %}}
 
 ### Combine Maps and Sets
 
@@ -188,3 +202,11 @@ thereby removing the value `"Janick"` from the set.
 Hint: Use the `assoc` and `disj` functions.
 
 Test: The set `{"Dave" "Adrian"}` is returned.
+
+{{% expand title="Solution" %}}
+```clojure
+(def guitarists #{"Dave" "Adrian" "Janick"})
+(def song {:title "Paschendale" :duration "8m28s"})
+(disj (:solos (assoc song :solos guitarists)) "Janick")
+```
+{{% /expand %}}

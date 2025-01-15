@@ -93,6 +93,21 @@ Hint: Bind the result of each `update` operation to a new variable.
 
 Test: Same as in original exercise.
 
+{{% expand title="Solution" %}}
+```clojure
+(def pliers {:price 7.55 :stock 23 :value 173.65 :revenue 0.0})
+(def hammers {:price 3.95 :stock 10 :value 39.50 :revenue 0.0})
+(def nails {:price 0.05 :stock 1974 :value 98.70 :revenue 0.0})
+
+(defn sell [quantity item]
+  (let [value (* quantity (:price item))
+        reduced-stock (update item :stock #(- % quantity))
+        reduced-value (update reduced-stock :value #(- % value))
+        increased-revenue (update reduced-value :revenue #(+ % value))]
+    increased-revenue))
+```
+{{% /expand %}}
+
 ### Formatting Durations
 
 Write a function `format-duration` that, given a duration in seconds, returns a
@@ -106,6 +121,21 @@ indications equal to `0` (e.g. `5m13s` or `1h30m` instead of `0h5m13s` or
 Test: `(format-duration 4321)` shall return `1h12m1s`, `(format-duration 3600)`
 shall return `1h`, and `(format-duration 62)` shall return `1m2s`.
 
+{{% expand title="Solution" %}}
+```clojure
+(defn format-duration [duration]
+  (let [hours (quot duration 3600)
+        duration (mod duration 3600)
+        minutes (quot duration 60)
+        duration (mod duration 60)
+        seconds duration
+        result (if (> hours 0) (str hours "h") "")
+        result (str result (if (> minutes 0) (str minutes "m") ""))
+        result (str result (if (> seconds 0) (str seconds "s") ""))]
+    result))
+```
+{{% /expand %}}
+
 ### Arcminutes and Arcseconds
 
 Write a function `print-angle` that expects a decimal angle in degrees, e.g.
@@ -116,3 +146,18 @@ Write a function `print-angle` that expects a decimal angle in degrees, e.g.
 Hint: Consider the hints from the last exercise.
 
 Test: `(print-angle 32.8451)` shall print `32°50'42"`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn print-angle [degrees]
+  (let [hours (quot degrees 1)
+        decimals1 (mod degrees 1)
+        minutes (quot decimals1 (/ 1 60))
+        decimals2 (mod decimals1 (/ 1 60))
+        seconds (quot decimals2 (/ 1 3600))
+        result (if (> hours 0) (str (int hours) "°") "")
+        result (str result (if (> minutes 0) (str (int minutes) "'") ""))
+        result (str result (if (> seconds 0) (str (int seconds) "\"") ""))]
+    (println result)))
+```
+{{% /expand %}}

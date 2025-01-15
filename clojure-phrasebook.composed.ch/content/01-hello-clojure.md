@@ -78,6 +78,13 @@ Hint: Use the formula `2ab`.
 
 Test: `(circumference 3 4)` shall return `14`.
 
+{{% expand title="Solution" %}}
+```clojure
+(defn circumference [a b]
+  (* 2 (+ a b)))
+```
+{{% /expand %}}
+
 ### Area of a Circle
 
 Write a function that computes the area of a circle given its radius `r`.
@@ -85,6 +92,13 @@ Write a function that computes the area of a circle given its radius `r`.
 Hint: Use the constant `Math/PI` and the formula `πr²`.
 
 Test: `(area 2)` shall return `12.566370614359172`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn area [r]
+  (* Math/PI (Math/pow r 2)))
+```
+{{% /expand %}}
 
 ### Minutes and Seconds
 
@@ -95,3 +109,11 @@ of (remaining) seconds.
 Hint: Use the `quot` and `mod` functions for the calculations.
 
 Test: `(min-sec 3578)` shall return `59m38s`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn min-sec [sec]
+  (str (quot sec 60) "m"
+       (mod sec 60) "s"))
+```
+{{% /expand %}}

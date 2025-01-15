@@ -139,6 +139,26 @@ predicate.
 Test: `(first-world? fr)` and `(first-world? it)` shall return `true`;
 `(first-world? ng)` and `(first-world? bd)` shall return `false`.
 
+{{% expand title="Solution" %}}
+```clojure
+(def fr {:name "France" :population 68373433 :hdi 0.91 :gdp 4.359e12})
+(def it {:name "Italy" :population 58968501 :hdi 0.906 :gdp 2.376e12})
+(def ng {:name "Nigeria" :population 230842743 :hdi 0.548 :gdp 0.252738e12})
+(def bd {:name "Bangladesh" :population 174655977 :hdi 0.670 :gdp 1.801e12})
+
+(defn wealthy? [country]
+  (>= (/ (:gdp country) (:population country)) 25000))
+
+(defn populous? [country]
+  (>= (:population country) 100000000))
+
+(defn developed? [country]
+  (>= (:hdi country) 0.75))
+
+(def first-world? (every-pred wealthy? (complement populous?) developed?))
+```
+{{% /expand %}}
+
 ### Partially Applied Predicate Functions
 
 The predicates in the last exercises used arbitrary thresholds. Re-write the
@@ -151,6 +171,28 @@ Hint: Use `partial` for partial function application. Re-define the predicates
 `wealthy?`, `populous?`, `developed?`, and `first-world?` using `def` bindings.
 
 Test: Same as before.
+
+{{% expand title="Solution" %}}
+```clojure
+(def fr {:name "France" :population 68373433 :hdi 0.91 :gdp 4.359e12})
+(def it {:name "Italy" :population 58968501 :hdi 0.906 :gdp 2.376e12})
+(def ng {:name "Nigeria" :population 230842743 :hdi 0.548 :gdp 0.252738e12})
+(def bd {:name "Bangladesh" :population 174655977 :hdi 0.670 :gdp 1.801e12})
+
+(defn wealthy? [threshold country]
+  (>= (/ (:gdp country) (:population country)) threshold))
+
+(defn populous? [threshold country]
+  (>= (:population country) threshold))
+
+(defn developed? [threshold country]
+  (>= (:hdi country) threshold))
+
+(def first-world? (every-pred (partial wealthy? 25000)
+                              (complement (partial populous? 100000000))
+                              (partial developed? 0.75)))
+```
+{{% /expand %}}
 
 ### Parametrized Predicate Functions
 
@@ -170,6 +212,28 @@ actual arguments to create the predicates.
 
 Test: Same as before.
 
+{{% expand title="Solution" %}}
+```clojure
+(def fr {:name "France" :population 68373433 :hdi 0.91 :gdp 4.359e12})
+(def it {:name "Italy" :population 58968501 :hdi 0.906 :gdp 2.376e12})
+(def ng {:name "Nigeria" :population 230842743 :hdi 0.548 :gdp 0.252738e12})
+(def bd {:name "Bangladesh" :population 174655977 :hdi 0.670 :gdp 1.801e12})
+
+(defn wealthy-pred [gdp-capita]
+  (fn [country] (>= (/ (:gdp country) (:population country)) gdp-capita)))
+
+(defn populous-pred [population]
+  (fn [country] (>= (:population country) population)))
+
+(defn developed-pred [hdi]
+  (fn [country] (>= (:hdi country) hdi)))
+
+(def first-world? (every-pred (wealthy-pred 25000)
+                              (complement (populous-pred 100000000))
+                              (developed-pred 0.75)))
+```
+{{% /expand %}}
+
 ### Number Transformations
 
 Write a function `transform` that accepts a vector of single argument functions
@@ -180,6 +244,15 @@ Hint: Pass function literals with the vector.
 
 Test: `(transform 2 [#(* % 10) #(+ % 2) #(/ % 2) #(- % 1)])` shall return `10`,
 and `(transform 7 [])` shall return `7`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn transform [x trans]
+  (if (empty? trans)
+    x
+    (transform ((first trans) x) (rest trans))))
+```
+{{% /expand %}}
 
 ### Map Update Function
 
@@ -200,3 +273,20 @@ Hint: Use nested `update` function calls to update the relevant fields.
 Test: `(sell 1 pliers)` shall return `{:price 7.55 :stock 22 :value 166.1
 :revenue 7.55}`, and `(sell 7 hammers)` shall return `{:price 3.95 :stock 3 
 :value 11.85 :revenue 27.65}`.
+
+{{% expand title="Solution" %}}
+```clojure
+(def pliers {:price 7.55 :stock 23 :value 173.65 :revenue 0.0})
+(def hammers {:price 3.95 :stock 10 :value 39.50 :revenue 0.0})
+(def nails {:price 0.05 :stock 1974 :value 98.70 :revenue 0.0})
+
+(defn sell [quantity item]
+  (update (update (update item
+                          :stock
+                          #(- % quantity))
+                  :value
+                  #(- % (* quantity (:price item))))
+          :revenue
+          #(+ % (* quantity (:price item)))))
+```
+{{% /expand %}}

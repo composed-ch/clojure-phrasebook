@@ -141,6 +141,12 @@ Hint: Use the `first` and `rest` functions.
 
 Test: The element `8` is returned.
 
+{{% expand title="Solution" %}}
+```clojure
+(first (rest (first (rest (rest (rest (first (rest (first (rest (rest numbers)))))))))))
+```
+{{% /expand %}}
+
 ### Extending a List
 
 Given the following list:
@@ -155,6 +161,12 @@ the list.
 Hint: Use the `cons` function.
 
 Test: The sequence `(0 1 2 3 4 5 6 7 8 9)` is returned.
+
+{{% expand title="Solution" %}}
+```clojure
+(cons 0 (cons 1 (cons 2 numbers)))
+```
+{{% /expand %}}
 
 ### Extending a Vector
 
@@ -171,3 +183,9 @@ Hint: Use the `cons` and `conj` functions. Unlike `cons`, `conj` returns a
 vector.
 
 Test: The sequence `(0 1 2 3 4 5 6 7 8 9)` is returned.
+
+{{% expand title="Solution" %}}
+```clojure
+(cons 0 (cons 1 (cons 2 (conj numbers 9))))
+```
+{{% /expand %}}
