@@ -75,3 +75,12 @@ Unlike `def`, `let` does _not_ create any vars:
 
 The REPL provides additional dynamic vars, such as `*1`, `*2` for the last,
 second last, etc. result, and `*e` for the last exception.
+
+## Exercises
+
+Ideas:
+
+1. turn verbose output on and off
+1. experiment with `*print-length*`
+1. memoization of factorial function using `binding` and `set!`
+1. memoization of Fibonacci function using `binding` and `set!`
