@@ -80,7 +80,8 @@ second last, etc. result, and `*e` for the last exception.
 
 Ideas:
 
-1. turn verbose output on and off
-1. experiment with `*print-length*`
-1. memoization of factorial function using `binding` and `set!`
-1. memoization of Fibonacci function using `binding` and `set!`
+1. turn verbose output on and off (recursive Fibonacci function, watch the call stack explode)
+1. memoization of Fibonacci function using `binding` and `set!` (Memoization as an alternative to tail-call optimization; however, a closure would be the better solution)
+    - bind initial empty map in the outer function
+    - in the inner function, use `set!` to store result before returning it, and `get` to fetch an already computed result
+1. add verbose output to this function to see the effect of memoization
