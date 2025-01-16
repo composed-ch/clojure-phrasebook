@@ -78,10 +78,133 @@ second last, etc. result, and `*e` for the last exception.
 
 ## Exercises
 
-Ideas:
+### Verbose Fibonacci
 
-1. turn verbose output on and off (recursive Fibonacci function, watch the call stack explode)
-1. memoization of Fibonacci function using `binding` and `set!` (Memoization as an alternative to tail-call optimization; however, a closure would be the better solution)
-    - bind initial empty map in the outer function
-    - in the inner function, use `set!` to store result before returning it, and `get` to fetch an already computed result
-1. add verbose output to this function to see the effect of memoization
+Write a function `fib` that expects a parameter `n`. The function shall compute
+the n-th Fibonacci number (see [chapter
+5](/05-more-capable-functions/index.html#fibonacci-numbers)), but write a
+recursive function _without_ tail-calls.
+
+Define a dynamic var `*verbose*`, which is set to `false` by default. Enhance
+the function `fib` so that it logs it calls in the form `fib(n)=x`, with `n`
+being the argument for `n`, and `x` the calculated result.
+
+Define another function `do-fib` that, besides the `n` parameter, also accepts a
+parameter `debug`. The original `fib` function then shall be invoked while
+setting the `*verbose*` flag to the value of `debug`.
+
+Hint: Use `binding` so set the `*verbose*` var temporarely.
+
+Test: `(do-fib 4 false)` shall return `5` and output nothing. `(do-fib 3 true)`
+shall return 3 and output the following:
+
+```plain
+fib(1)=1
+fib(0)=1
+fib(1)=1
+fib(2)=2
+fib(3)=3
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(def ^:dynamic *verbose* false)
+
+(defn do-fib [n debug]
+  (binding [*verbose* debug]
+    (fib n)))
+
+(defn fib [n]
+    (let [result (if (<= n 1) 1 (+ (fib (- n 2)) (fib (- n 1))))]
+      (when *verbose*
+        (println (str "fib(" n ")=" result)))
+      result))
+```
+{{% /expand %}}
+
+### Memoized Fibonacci
+
+> [!WARNING]
+> Either the idea or the implementation is bogus and has yet to be clarified.
+
+Create a dynamic binding `*cache*` that is initialized to an empty map.
+
+Write a _memoized_ implementation of a function that computes the nth Fibonacci
+number, expecting the parameter `n`. _Memoization_ is an optimization that works
+as follows:
+
+1. For the arguments `0` and `1`, alsways return `1`.
+2. If the parameter `n` is a key in the map, return the value associated with it.
+3. Otherwise, calculate the result `n`, and store it in the map.
+
+Hint: Handle the three cases using `cond`. For the third case, first compute
+`(fib (- n 2)` and cache its result using `binding` and `set!`. Then calculate
+`(fib (- n 1)`, which now can make use of the cache.
+
+Test: `(fib 42)` shall return 433494437—and finish within a second.
+
+{{% expand title="Solution" %}}
+```clojure
+(def ^:dynamic *cache* {})
+
+(defn fib [n]
+  (cond
+    (<= n 1) 1
+    (contains? *cache* n) (get *cache* n)
+    :else
+    (let [n-2 (- n 2)
+          fib-n-2 (fib n-2)]
+      (binding [*cache* *cache*]
+        (set! *cache* (assoc *cache* n-2 fib-n-2))
+        (let [n-1 (- n 1)
+              fib-n-1 (fib n-1)]
+          (+ fib-n-1 fib-n-2))))))
+```
+{{% /expand %}}
+
+### Verbose Memoized Fibonacci
+
+Combine the solutions of the two previous exercises to enable debug output of
+the memoized Fibonacci function. Write a function `(do-fib n debug)` that turns
+verbose output on and off based on the value of `debug`.
+
+Hint: Use two dynamic vars: `*cache*` and `*verbose*`. 
+
+Test: `(do-fib 6 true)` shall return `13` and output:
+
+```plain
+fib(2)=2
+fib(3)=3
+fib(4)=5
+fib(2)=2
+fib(3)=3
+fib(5)=8
+fib(6)=13
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(def ^:dynamic *verbose* false)
+(def ^:dynamic *cache* {})
+
+(defn fib [n]
+  (cond
+    (<= n 1) 1
+    (contains? *cache* n) (get *cache* n)
+    :else
+    (let [n-2 (- n 2)
+          fib-n-2 (fib n-2)]
+      (binding [*cache* *cache*]
+        (set! *cache* (assoc *cache* n-2 fib-n-2))
+        (let [n-1 (- n 1)
+              fib-n-1 (fib n-1)
+              result (+ fib-n-1 fib-n-2)]
+          (when *verbose*
+            (println (str "fib(" n ")=" result)))
+          result)))))
+
+(defn do-fib [n debug]
+  (binding [*verbose* debug]
+    (fib n)))
+```
+{{% /expand %}}
