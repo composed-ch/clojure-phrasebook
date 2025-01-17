@@ -124,9 +124,6 @@ fib(3)=3
 
 ### Memoized Fibonacci
 
-> [!WARNING]
-> Either the idea or the implementation is bogus and has yet to be clarified.
-
 Create a dynamic binding `*cache*` that is initialized to an empty map.
 
 Write a _memoized_ implementation of a function that computes the nth Fibonacci
@@ -138,8 +135,8 @@ as follows:
 3. Otherwise, calculate the result `n`, and store it in the map.
 
 Hint: Handle the three cases using `cond`. For the third case, first compute
-`(fib (- n 2)` and cache its result using `binding` and `set!`. Then calculate
-`(fib (- n 1)`, which now can make use of the cache.
+`(fib (- n 2)` and cache its result using `binding`. Then calculate `(fib (- n
+1)`, which now can make use of the cache.
 
 Test: `(fib 42)` shall return 433494437—and finish within a second.
 
@@ -154,32 +151,39 @@ Test: `(fib 42)` shall return 433494437—and finish within a second.
     :else
     (let [n-2 (- n 2)
           fib-n-2 (fib n-2)]
-      (binding [*cache* *cache*]
-        (set! *cache* (assoc *cache* n-2 fib-n-2))
+      (binding [*cache* (assoc *cache* n-2 fib-n-2)]
         (let [n-1 (- n 1)
               fib-n-1 (fib n-1)]
           (+ fib-n-1 fib-n-2))))))
 ```
+
+Note: The cached values are only available within the `binding` block, i.e.
+cached values are only available for the calculation of `(fib (- n 1))`.
 {{% /expand %}}
 
 ### Verbose Memoized Fibonacci
 
 Combine the solutions of the two previous exercises to enable debug output of
 the memoized Fibonacci function. Write a function `(do-fib n debug)` that turns
-verbose output on and off based on the value of `debug`.
+verbose output on and off based on the value of `debug`. The output shall
+indicate the argument `n`, the result of the computation `(fib n)`, and whether
+or not the cache was hit or missed.
 
 Hint: Use two dynamic vars: `*cache*` and `*verbose*`. 
 
 Test: `(do-fib 6 true)` shall return `13` and output:
 
 ```plain
-fib(2)=2
-fib(3)=3
-fib(4)=5
-fib(2)=2
-fib(3)=3
-fib(5)=8
-fib(6)=13
+fib(2)=2 cache hit
+fib(2)=2 cache missed
+fib(3)=3 cache hit
+fib(4)=5 cache hit
+fib(2)=2 cache hit
+fib(3)=3 cache hit
+fib(4)=5 cache missed
+fib(5)=8 cache hit
+fib(6)=13 cache hit
+13
 ```
 
 {{% expand title="Solution" %}}
@@ -190,17 +194,19 @@ fib(6)=13
 (defn fib [n]
   (cond
     (<= n 1) 1
-    (contains? *cache* n) (get *cache* n)
+    (contains? *cache* n)
+    (let [result (get *cache* n)]
+      (println (str "fib(" n ")=" result) "cache missed")
+      result)
     :else
     (let [n-2 (- n 2)
           fib-n-2 (fib n-2)]
-      (binding [*cache* *cache*]
-        (set! *cache* (assoc *cache* n-2 fib-n-2))
+      (binding [*cache* (assoc *cache* n-2 fib-n-2)]
         (let [n-1 (- n 1)
               fib-n-1 (fib n-1)
               result (+ fib-n-1 fib-n-2)]
           (when *verbose*
-            (println (str "fib(" n ")=" result)))
+            (println (str "fib(" n ")=" result) "cache hit"))
           result)))))
 
 (defn do-fib [n debug]
