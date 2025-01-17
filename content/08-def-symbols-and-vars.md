@@ -96,7 +96,7 @@ setting the `*verbose*` flag to the value of `debug`.
 Hint: Use `binding` so set the `*verbose*` var temporarely.
 
 Test: `(do-fib 4 false)` shall return `5` and output nothing. `(do-fib 3 true)`
-shall return 3 and output the following:
+shall return `3` and output the following:
 
 ```plain
 fib(1)=1
@@ -135,10 +135,10 @@ as follows:
 3. Otherwise, calculate the result `n`, and store it in the map.
 
 Hint: Handle the three cases using `cond`. For the third case, first compute
-`(fib (- n 2)` and cache its result using `binding`. Then calculate `(fib (- n
-1)`, which now can make use of the cache.
+`(fib (- n 2))` and cache its result using `binding`. Then calculate `(fib (- n
+1))`, which now can make use of the cache.
 
-Test: `(fib 42)` shall return 433494437—and finish within a second.
+Test: `(fib 42)` shall return `433494437`—and finish within a second.
 
 {{% expand title="Solution" %}}
 ```clojure
@@ -158,7 +158,8 @@ Test: `(fib 42)` shall return 433494437—and finish within a second.
 ```
 
 Note: The cached values are only available within the `binding` block, i.e.
-cached values are only available for the calculation of `(fib (- n 1))`.
+cached values are only available for the computation of `(fib (- n 1))`, but
+not for `(fib (- n 2))`.
 {{% /expand %}}
 
 ### Verbose Memoized Fibonacci
