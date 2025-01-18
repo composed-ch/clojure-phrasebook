@@ -191,3 +191,14 @@ Define a var that resits `:reload` (e.g. when initialized using a heavy function
 ```clojure
 (defonce fib-42 (fib 42))
 ```
+
+## Exercises
+
+- create a new Leinigen project
+- create a new namespace recursion with a recursive fibonacci function fib
+- use the function in core/-main to compute a fib(35)
+- create a new namespace tail-recursion with a tail-recursive fib implementation
+  - link to original exercise
+  - /05-more-capable-functions/index.html#fibonacci-numbers
+- use the function in core/-main with :as reference
+  - run both functions with timed?
