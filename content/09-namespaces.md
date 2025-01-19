@@ -210,7 +210,6 @@ lein run
 ```
 {{% /expand %}}
 
-
 ### Additional Namespace
 
 Create a new namespace `recursive` within the `fibonacci`
@@ -229,7 +228,7 @@ Test: The application shall output `fib(35)=14930352`.
 `src/fibonacci/recursive.clj`:
 
 ```clojure
-(ns recursive)
+(ns fibonacci.recursive)
 
 (defn fib [n]
   (if (<= n 1)
@@ -252,9 +251,47 @@ Test: The application shall output `fib(35)=14930352`.
 
 ### Yet Another Namespace
 
-- create a new namespace tail-recursion with a tail-recursive fib implementation
-  - link to original exercise
-  - /05-more-capable-functions/index.html#fibonacci-numbers
-- use the function in core/-main with :as reference
-  - run both functions with timed?
-  - maybe use defonce?
+Create a new namespace `tail-recursive` within the `fibonacci`
+project. Re-use the tail-recursive implementation of the `fib`
+function from [chapter
+5](/05-more-capable-functions/#fibonacci-numbers).
+
+Now import both the recursive and tail-recursive namespaces into the
+`core` namespace as `fib-rec` and `fib-tail`, respectively. Call both
+functions with the argument `35` and output the result as before.
+
+Hint: Use `:require` and `:as` to define an alias name for the
+namespaces.
+
+Test: The application shall output `fib(35)=14930352` _twice_.
+
+{{% expand title="Solution" %}}
+
+`src/fibonacci/tail_recursive.clj`:
+
+```clojure
+(ns fibonacci.tail-recursive)
+
+(defn fib [n]
+  (loop [a 1
+         b 1
+         i n]
+    (if (= i 0)
+      a
+      (recur b (+ a b) (- i 1)))))
+```
+
+`src/fibonacci/core.clj`:
+
+```clojure
+(ns fibonacci.core
+  (:require [fibonacci.recursive :as fib-rec])
+  (:require [fibonacci.tail-recursive :as fib-tail])
+  (:gen-class))
+
+(defn -main
+  [& args]
+  (println (str "fib(35)=" (fib-rec/fib 35)))
+  (println (str "fib(35)=" (fib-tail/fib 35))))
+```
+{{% /expand %}}
