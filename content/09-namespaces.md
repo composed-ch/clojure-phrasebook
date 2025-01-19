@@ -222,7 +222,7 @@ and call it with the argument `35` and output the result.
 Hint: Put the file into the `src/fibonacci` folder and name it
 according to the namespace defined therin.
 
-Test: The application shall output `fib(35)=???`.
+Test: The application shall output `fib(35)=14930352`.
 
 {{% expand title="Solution" %}}
 
@@ -240,11 +240,18 @@ Test: The application shall output `fib(35)=???`.
 `src/fibonacci/core.clj`:
 
 ```clojure
+(ns fibonacci.core
+  (:require fibonacci.recursive)
+  (:gen-class))
+
+(defn -main
+  [& args]
+  (println (str "fib(35)=" (recursive/fib 35))))
 ```
 {{% /expand %}}
 
-- create a new namespace recursion with a recursive fibonacci function fib
-- use the function in core/-main to compute a fib(35)
+### Yet Another Namespace
+
 - create a new namespace tail-recursion with a tail-recursive fib implementation
   - link to original exercise
   - /05-more-capable-functions/index.html#fibonacci-numbers
