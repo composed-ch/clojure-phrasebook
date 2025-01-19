@@ -194,7 +194,55 @@ Define a var that resits `:reload` (e.g. when initialized using a heavy function
 
 ## Exercises
 
-- create a new Leinigen project
+### Leiningen Project
+
+Create a new Leiningen project called `fibonacci` and run the generated code.
+
+Hint: Use `lein run` to run the project from the `fibonacci/` folder.
+
+Test: `lein run` shall output `"Hello, World!"`.
+
+{{% expand title="Solution" %}}
+```sh
+lein new app fibonacci
+cd fibonacci
+lein run
+```
+{{% /expand %}}
+
+
+### Additional Namespace
+
+Create a new namespace `recursive` within the `fibonacci`
+project. Implement a function called `fib` that calculates the nth
+Fibonacci number given the parameter `n`. Use that function from the
+`core` namespace (`src/fibonacci/core.clj`) in the `-main` function
+and call it with the argument `35` and output the result.
+
+Hint: Put the file into the `src/fibonacci` folder and name it
+according to the namespace defined therin.
+
+Test: The application shall output `fib(35)=???`.
+
+{{% expand title="Solution" %}}
+
+`src/fibonacci/recursive.clj`:
+
+```clojure
+(ns recursive)
+
+(defn fib [n]
+  (if (<= n 1)
+    1
+    (+ (fib (- n 2)) (fib (- n 1)))))
+```
+
+`src/fibonacci/core.clj`:
+
+```clojure
+```
+{{% /expand %}}
+
 - create a new namespace recursion with a recursive fibonacci function fib
 - use the function in core/-main to compute a fib(35)
 - create a new namespace tail-recursion with a tail-recursive fib implementation
@@ -202,3 +250,4 @@ Define a var that resits `:reload` (e.g. when initialized using a heavy function
   - /05-more-capable-functions/index.html#fibonacci-numbers
 - use the function in core/-main with :as reference
   - run both functions with timed?
+  - maybe use defonce?
