@@ -139,12 +139,24 @@ The `{:even 0 :odd 0}` map (second argument) becomes the initial
 
 ## Exercises
 
-### TODO: Write your own `compose` function.
+### Compose Function
+
+Write a variadic function `compose` that expects functions as
+arguments. The function shall return another function expecting a
+single argument that first applies the last given function, then
+applies its result to the second-last given function, etc.
+
+Hint: Use `last` and `butlast` to separate the last element from the
+rest of a collection.
+
+Test: `((compose #(- % 1) #(* % 2) #(+ % 1)) 5)` shall return `11`.
+
+TODO: solution
 
 ### Sequence Count
 
 Write a function `seq-count` that accepts a vector, a list, a set, or
-a map, and returns the number of elements in that collection.
+a map, and returns the number of elements in the given collection.
 
 Hint: Convert the collection to a sequence first and use `next` to
 traverse the sequence.
@@ -152,23 +164,63 @@ traverse the sequence.
 Test: `(seq-count [])` shall return 0, `(seq-count [1 2 3])` shall
 return 3, and `(seq-count [nil nil])` shall return 2.
 
+TODO: solution
+
 ### Parse Numbers
 
-Given a collection of numbers and strings, the latter of which could
-represent a number, write a function `as-nums` that returns a sequence
-of numbers. If a string cannot be parsed as a number, return 0 in its
-place.
+Given a collection of numbers, booleans and strings, write a function `as-nums` that returns a collection of numbers as follows:
+
+- Numbers shall be retained as they are,
+- booleans shall be converted to `1` (`true`) or `0` (`false`),
+- and strings shall be parsed to floating point numbers.
+
+Strings that cannot be parsed as a number or elements of any other
+type can be ignored.
 
 Hint: Use `Float/parseFloat` to parse the strings. Handle a possible
-`NumberFormatException` by returning 0.0.
+`NumberFormatException`.
 
-Test: TODO
+Test: `(as-nums [3 2.5 true true false "1.25" "hey" :ho nil 7])` shall
+return `(3 2.5 1 1 1.25 7)`.
 
-### TODO: Longest Songs
+TODO: solution
 
-TODO: vector of songs with durations (3m15s, 7m15s, etc.), find and
-display the longest three, formatted nicely.
+### Longest Songs
 
-### TODO: Pointy Arrow Refactoring
+Fiven a vector of songs:
 
-TODO: refactor the last exercise using the `->>` operator.
+```clojure
+(def songs [{:name "Pale Fire" :duration "4m17s"}
+            {:name "Monument" :duration "6m34s"}
+            {:name "The Ivory Gate of Dreams" :duration "21m58s"}
+            {:name "Still Remains" :duration "16m8s"}
+            {:name "The Ghosts of Home" :duration "10m31s"}
+            {:name "Glass Houses" :duration "3m35s"}
+            {:name "Guardian" :duration "7m33s"}
+            {:name "Exodus" :duration "8m39s"}])
+```
+
+Write a function `longest` that accepts a positive numeric parameter
+`n`, and returns the `n` longest songs formatted as a string.
+
+Hint: Use `re-matcher` and `re-find` with `map` to parse the
+`:duration`, `sort` and `reverse` to sort the result in descending
+order, `take` to extract the first `n` elements, and `interleave` to
+format the output.
+
+Test: `(longest 3 songs)` shall return `"1) The Ivory Gate of Dreams |
+2) Still Remains | 3) The Ghosts of Home"`.
+
+TODO: solution
+
+### Pointy Arrow Refactoring
+
+Rrefactor the `longest` function from the last exercise using the
+_pointy arrow_ operator `->>`
+
+Hint: The `->>` operator takes the return value from a function, and
+hands it down to the next function as its last parameter.
+
+Test: Same as in last exercise.
+
+TODO: solution
