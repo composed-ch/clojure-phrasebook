@@ -205,7 +205,7 @@ Hint: Use `Float/parseFloat` to parse the strings. Handle a possible
 Test: `(as-nums [3 2.5 true true false "1.25" "hey" :ho nil 7])` shall
 return `(3 2.5 1 1 0 1.25 7)`.
 
-{{% expand %}}
+{{% expand title="Solution" %}}
 ```clojure
 (defn try-parse [s]
   (try
@@ -243,17 +243,43 @@ Given a vector of songs:
 ```
 
 Write a function `longest` that accepts a positive numeric parameter
-`n`, and returns the `n` longest songs formatted as a string.
+`n`, a collection of songs, and returns the `n` longest songs
+formatted as a string.
 
-Hint: Use `re-matcher` and `re-find` with `map` to parse the
-`:duration`, `sort` and `reverse` to sort the result in descending
-order, `take` to extract the first `n` elements, and `interleave` to
+Hint: Write a helper function `parse-duration` that converts the
+duration into a number of seconds. Use regular expressions with
+[`re-matcher`](https://clojuredocs.org/clojure.core/re-matcher) and
+[`re-find`](https://clojuredocs.org/clojure.core/re-find) for that
+purpose. Use `sort-by` and `reverse` to sort the result in descending
+order, `take` to extract the first `n` elements, and `interpose` to
 format the output.
 
 Test: `(longest 3 songs)` shall return `"1) The Ivory Gate of Dreams |
 2) Still Remains | 3) The Ghosts of Home"`.
 
-TODO: solution
+{{% expand title="Solution" %}}
+```clojure
+(defn parse-duration [dur]
+  (let [matcher (re-matcher #"^(\d+)m(\d+)s$" dur)
+        results (re-find matcher)]
+    (if (= (count results) 3)
+      (+ (* (Integer/parseInt (get results 1)) 60)
+         (Integer/parseInt (get results 2)))
+      0)))
+
+(defn longest [n songs]
+  (let [with-secs (map #(assoc % :secs (parse-duration (:duration %))) songs)
+        sorted (sort-by :secs with-secs)
+        reversed (reverse sorted)
+        top-n (take n reversed)]
+    (loop [n 1
+           songs top-n
+           acc []]
+      (if (empty? songs)
+        (reduce #(str %1 %2) "" (interpose " | " acc))
+        (recur (+ n 1) (rest songs) (conj acc (str n ") " (:name (first songs)))))))))
+```
+{{% /expand %}}
 
 ### Pointy Arrow Refactoring
 
