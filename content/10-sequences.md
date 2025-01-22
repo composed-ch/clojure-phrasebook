@@ -188,8 +188,9 @@ return 3, and `(seq-count [nil nil])` shall return 2.
 
 ### Parse Numbers
 
-Given a collection of numbers, booleans and strings, write a function
-`as-nums` that returns a sequence of numbers as follows:
+Given a collection of numbers, booleans, strings, and elements of
+other types, write a function `as-nums` that returns a sequence of
+numbers as follows:
 
 - Numbers shall be retained as they are,
 - booleans shall be converted to `1` (`true`) or `0` (`false`),
