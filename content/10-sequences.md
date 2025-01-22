@@ -141,17 +141,28 @@ The `{:even 0 :odd 0}` map (second argument) becomes the initial
 
 ### Compose Function
 
-Write a variadic function `compose` that expects functions as
-arguments. The function shall return another function expecting a
+Write a function `compose` that expects a vector functions as its
+argument. The function shall return another function expecting a
 single argument that first applies the last given function, then
 applies its result to the second-last given function, etc.
 
 Hint: Use `last` and `butlast` to separate the last element from the
-rest of a collection.
+rest of a collection. If no functions are passed, just return the
+`identity` function.
 
-Test: `((compose #(- % 1) #(* % 2) #(+ % 1)) 5)` shall return `11`.
+Test: `((compose [#(- % 1) #(* % 2) #(+ % 1)]) 5)` shall return `11`.
 
-TODO: solution
+{{% expand title="Solution" %}}
+```clojure
+(defn compose [fns]
+  (let [f (last fns)
+        fns (butlast fns)]
+    (cond
+      (nil? f) identity
+      (nil? fns) f
+      :else (fn [x] ((compose fns) (f x))))))
+```
+{{% /expand %}}
 
 ### Sequence Count
 
