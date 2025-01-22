@@ -100,9 +100,46 @@ Transform the elements of a collection:
 (map #(* % 2) [0 1 2 3]) ; (0 2 4 6)
 ```
 
-TODO: summarize the rest of the chapter
+Compose functions:
+
+```clojure
+(def twice-the-successor (comp #(* % 2) #(+ % 1)))
+(twice-the-successor 3) ; 8
+(map twice-the-successor [0 1 2 3]) ; (2 4 6 8)
+```
+
+Executing `((comp f g) x)` is equivalent to `(f (g x))`.
+
+Process a collection in a loop:
+
+```clojure
+(for [x [1 2 3]] (* x 2)) ; (2 4 6)
+```
+
+Combine the elements of a collection to a single value:
+
+```clojure
+(reduce (fn [acc x] (* acc x)) [1 2 3 4]) ; 24
+```
+
+Provide an initial _accumulator_ value (instead of using the first
+element):
+
+```clojure
+(reduce (fn [acc x]
+          (if (= (mod x 2) 0)
+            (assoc acc :even (+ (:even acc) 1))
+            (assoc acc :odd (+ (:odd acc) 1))))
+        {:even 0 :odd 0}
+        [0 1 2 3 4 8 16]) ; {:even 5, :odd 2}
+```
+
+The `{:even 0 :odd 0}` map (second argument) becomes the initial
+`acc`.
 
 ## Exercises
+
+### TODO: Write your own `compose` function.
 
 ### Sequence Count
 
@@ -118,7 +155,7 @@ return 3, and `(seq-count [nil nil])` shall return 2.
 ### Parse Numbers
 
 Given a collection of numbers and strings, the latter of which could
-represent a number, write a function `as-nums` taht returns a sequence
+represent a number, write a function `as-nums` that returns a sequence
 of numbers. If a string cannot be parsed as a number, return 0 in its
 place.
 
@@ -126,3 +163,12 @@ Hint: Use `Float/parseFloat` to parse the strings. Handle a possible
 `NumberFormatException` by returning 0.0.
 
 Test: TODO
+
+### TODO: Longest Songs
+
+TODO: vector of songs with durations (3m15s, 7m15s, etc.), find and
+display the longest three, formatted nicely.
+
+### TODO: Pointy Arrow Refactoring
+
+TODO: refactor the last exercise using the `->>` operator.
