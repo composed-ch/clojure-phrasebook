@@ -188,22 +188,43 @@ return 3, and `(seq-count [nil nil])` shall return 2.
 
 ### Parse Numbers
 
-Given a collection of numbers, booleans and strings, write a function `as-nums` that returns a collection of numbers as follows:
+Given a collection of numbers, booleans and strings, write a function
+`as-nums` that returns a sequence of numbers as follows:
 
 - Numbers shall be retained as they are,
 - booleans shall be converted to `1` (`true`) or `0` (`false`),
 - and strings shall be parsed to floating point numbers.
 
 Strings that cannot be parsed as a number or elements of any other
-type can be ignored.
+type can be ignored and won't end up in the returned sequence.
 
 Hint: Use `Float/parseFloat` to parse the strings. Handle a possible
 `NumberFormatException`.
 
 Test: `(as-nums [3 2.5 true true false "1.25" "hey" :ho nil 7])` shall
-return `(3 2.5 1 1 1.25 7)`.
+return `(3 2.5 1 1 0 1.25 7)`.
 
-TODO: solution
+{{% expand %}}
+```clojure
+(defn try-parse [s]
+  (try
+    (Float/parseFloat s)
+    (catch NumberFormatException e nil)))
+    
+(defn as-nums [coll]
+  (loop [coll (seq coll)
+         acc (seq [])]
+    (let [x (last coll)
+          xs (butlast coll)]
+      (cond
+        (nil? coll) acc
+        (number? x) (recur xs (cons x acc))
+        (boolean? x) (recur xs (cons (if x 1 0) acc))
+        (string? x) (let [y (try-parse x)]
+                      (recur xs (if y (cons y acc) acc)))
+        :else (recur xs acc)))))
+```
+{{% /expand %}}
 
 ### Longest Songs
 
