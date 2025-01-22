@@ -175,7 +175,16 @@ traverse the sequence.
 Test: `(seq-count [])` shall return 0, `(seq-count [1 2 3])` shall
 return 3, and `(seq-count [nil nil])` shall return 2.
 
-TODO: solution
+{{% expand title="Solution" %}}
+```clojure
+(defn seq-count [coll]
+  (loop [xs (seq coll)
+         n 0]
+    (if (nil? xs)
+      n
+      (recur (next xs) (+ n 1)))))
+```
+{{% /expand %}}
 
 ### Parse Numbers
 
