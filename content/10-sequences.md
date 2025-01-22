@@ -287,8 +287,29 @@ Rrefactor the `longest` function from the last exercise using the
 _pointy arrow_ operator `->>`
 
 Hint: The `->>` operator takes the return value from a function, and
-hands it down to the next function as its last parameter.
+hands it down to the next function as its last parameter. The `range`
+function creates a sequence starting from the first parameter
+(inclusive) up to the second parameter (exclusive). Use `interleave`
+and `partition` to combine two sequences.
 
 Test: Same as in last exercise.
 
-TODO: solution
+{{% expand title="Solution" %}}
+```clojure
+;; parse-duration as before
+
+(defn longest [n songs]
+  (->>
+   songs
+   (map #(assoc % :secs (parse-duration (:duration %))))
+   (sort-by :secs)
+   (reverse)
+   (take n)
+   (map #(:name %))
+   (interleave (range 1 (+ n 1)))
+   (partition 2)
+   (map #(str (first %) ") " (second %)))
+   (interpose " | ")
+   (reduce #(str %1 %2) "")))
+```
+{{% /expand %}}
