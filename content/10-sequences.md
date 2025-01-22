@@ -228,7 +228,7 @@ return `(3 2.5 1 1 0 1.25 7)`.
 
 ### Longest Songs
 
-Fiven a vector of songs:
+Given a vector of songs:
 
 ```clojure
 (def songs [{:name "Pale Fire" :duration "4m17s"}
