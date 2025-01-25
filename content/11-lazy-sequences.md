@@ -136,7 +136,7 @@ Test: `(take 10 (fib-stream))` shall return `(1 1 2 3 5 8 13 21 34
 {{% expand title="Solution" %}}
 ```clojure
 (defn lazy-fib
-  ([] (fib-stream 1 1))
+  ([] (lazy-fib 1 1))
   ([a b] (cons a (lazy-seq (lazy-fib b (+ a b))))))
 ```
 {{% /expand %}}
@@ -170,13 +170,13 @@ Test: `(take 10 (lazy-primes))` shall return `(2 3 5 7 11 13 17 19 23
 ```
 {{% /expand %}}
 
-### Prime Number File Filtering
+### Process File Line by Line
 
-Write a function `filter-primes` that expects two parameters: a path
-to a source and a path to a sink file. The source file shall be
-processed line by line. If the line can be parsed into a number, and
-if that number is a prime number, it shall be written to the sink
-file.
+Write a function `sum-up-to` that reads lines from a text file, tries
+to parse them as numbers, sums those numbers up until a given limit is
+reached, and writes the processed numeric lines into a output text
+file. Both `source` and `target` paths and the `limit` are given as
+parameters.
 
 Hint: Use `with-open`, `clojure.java.io/reader`,
 `clojure.java.io/writer`, and `line-seq` for (lazy) file processing.
@@ -199,35 +199,27 @@ wah
 7
 ```
 
-`(filter-primes lines.txt primes.txt)` shall produce a file
+`(sum-up-to lines.txt 16 primes.txt)` shall produce a file
 `primes.txt` with the following content:
 
 ```plain
+1
+2
 3
+4
 5
-7
 ```
 
 {{% expand title="Solution" %}}
 
 > [!WARNING]
-> This implementation is erroneous and needs to be fixed.
+> Implementation unfinished; issue to be resolved first.
 
 ```clojure
 (defn try-parse [s]
   (try (Integer/parseInt s)
        (catch NumberFormatException e nil)))
 
-(defn filter-primes [source sink]
-  (with-open [r (clojure.java.io/reader source)
-              w (clojure.java.io/writer sink)
-              lines (line-seq r)]
-    (loop [l (first lines)
-           ls (next lines)]
-      (when l
-        (let [x (try-parse l)]
-          (when (and (x (is-prime x)))
-            (.write w (str x "\n"))))
-        (recur (first ls) (next ls))))))
+;; TODO
 ```
 {{% /expand %}}
