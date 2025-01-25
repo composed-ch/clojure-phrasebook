@@ -174,12 +174,13 @@ Test: `(take 10 (lazy-primes))` shall return `(2 3 5 7 11 13 17 19 23
 
 Write a function `sum-up-to` that reads lines from a text file, tries
 to parse them as numbers, sums those numbers up until a given limit is
-reached, and writes the processed numeric lines into a output text
-file. Both `source` and `target` paths and the `limit` are given as
-parameters.
+reached, writes the processed numeric lines into a output text file,
+and returns the sum. Both `source` and `target` paths and the `limit`
+are given as parameters.
 
 Hint: Use `with-open`, `clojure.java.io/reader`,
-`clojure.java.io/writer`, and `line-seq` for (lazy) file processing.
+`clojure.java.io/writer`, and `line-seq` for (lazy) file line by line
+processing.
 
 Test: Given the following file `lines.txt`:
 
@@ -199,8 +200,8 @@ wah
 7
 ```
 
-`(sum-up-to lines.txt 16 primes.txt)` shall produce a file
-`primes.txt` with the following content:
+`(sum-up-to lines.txt result.txt 16)` shall return `15` and produce a
+file `result.txt` with the following content:
 
 ```plain
 1
@@ -211,15 +212,25 @@ wah
 ```
 
 {{% expand title="Solution" %}}
-
-> [!WARNING]
-> Implementation unfinished; issue to be resolved first.
-
 ```clojure
 (defn try-parse [s]
   (try (Integer/parseInt s)
        (catch NumberFormatException e nil)))
 
-;; TODO
+(defn sum-up-to [source sink limit]
+  (with-open [r (clojure.java.io/reader source)
+              w (clojure.java.io/writer sink)]
+    (loop [lines (line-seq r)
+           acc 0]
+      (let [line (first lines)
+            x (try-parse line)]
+        (if x
+          (let [y (if x (+ acc x) acc)]
+            (if (> y limit)
+              acc
+              (do
+                (.write w (str x "\n"))
+                (recur (rest lines) y))))
+          (recur (rest lines) acc))))))
 ```
 {{% /expand %}}
