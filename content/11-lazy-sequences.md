@@ -141,7 +141,93 @@ Test: `(take 10 (fib-stream))` shall return `(1 1 2 3 5 8 13 21 34
 ```
 {{% /expand %}}
 
-TODO:
+### Lazy Prime Numbers
 
-1. create a stream of prime numbers
-1. filter file with numbers and output prime numbers
+Write a function `lazy-primes` that returns a lazy sequence of prime
+numbers. Write a predicate function `is-prime` that checks whether or
+not the given argument is a prime number.
+
+Hint: Use `cons` and `lazy-seq` again. Use the functions `take-while`
+and `some` to create and process the candidates for the divisibility
+test in the `is-prime` predicate.
+
+Test: `(take 10 (lazy-primes))` shall return `(2 3 5 7 11 13 17 19 23
+29)`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn is-prime [x]
+  (if (< x 2)
+    false
+    (let [ys (take-while #(<= % (/ x 2)) (iterate inc 2))]
+      (not (some #(= (mod x %) 0) ys)))))
+
+(defn lazy-primes
+  ([] (lazy-primes 2))
+  ([x] (if (is-prime x)
+         (cons x (lazy-seq (lazy-primes (inc x))))
+         (lazy-seq (lazy-primes (inc x))))))
+```
+{{% /expand %}}
+
+### Prime Number File Filtering
+
+Write a function `filter-primes` that expects two parameters: a path
+to a source and a path to a sink file. The source file shall be
+processed line by line. If the line can be parsed into a number, and
+if that number is a prime number, it shall be written to the sink
+file.
+
+Hint: Use `with-open`, `clojure.java.io/reader`,
+`clojure.java.io/writer`, and `line-seq` for (lazy) file processing.
+
+Test: Given the following file `lines.txt`:
+
+```plain
+1
+foo
+2
+bar
+3
+qux
+4
+baz
+5
+bum
+6
+wah
+7
+```
+
+`(filter-primes lines.txt primes.txt)` shall produce a file
+`primes.txt` with the following content:
+
+```plain
+3
+5
+7
+```
+
+{{% expand title="Solution" %}}
+
+> [!WARNING]
+> This implementation is erroneous and needs to be fixed.
+
+```clojure
+(defn try-parse [s]
+  (try (Integer/parseInt s)
+       (catch NumberFormatException e nil)))
+
+(defn filter-primes [source sink]
+  (with-open [r (clojure.java.io/reader source)
+              w (clojure.java.io/writer sink)
+              lines (line-seq r)]
+    (loop [l (first lines)
+           ls (next lines)]
+      (when l
+        (let [x (try-parse l)]
+          (when (and (x (is-prime x)))
+            (.write w (str x "\n"))))
+        (recur (first ls) (next ls))))))
+```
+{{% /expand %}}
