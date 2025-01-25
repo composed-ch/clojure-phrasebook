@@ -180,7 +180,8 @@ are given as parameters.
 
 Hint: Use `with-open`, `clojure.java.io/reader`,
 `clojure.java.io/writer`, and `line-seq` for (lazy) file line by line
-processing.
+processing. If the lines are exhausted before the limit is reached,
+the current sum should be returned.
 
 Test: Given the following file `lines.txt`:
 
@@ -224,13 +225,15 @@ file `result.txt` with the following content:
            acc 0]
       (let [line (first lines)
             x (try-parse line)]
-        (if x
-          (let [y (if x (+ acc x) acc)]
-            (if (> y limit)
-              acc
-              (do
-                (.write w (str x "\n"))
-                (recur (rest lines) y))))
-          (recur (rest lines) acc))))))
+        (if (nil? line)
+          acc
+          (if x
+            (let [y (if x (+ acc x) acc)]
+              (if (> y limit)
+                acc
+                (do
+                  (.write w (str x "\n"))
+                  (recur (rest lines) y))))
+            (recur (rest lines) acc)))))))
 ```
 {{% /expand %}}
