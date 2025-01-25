@@ -118,8 +118,30 @@ Write a function that produces a lazy sequence:
 (take 5 (my-iterate #(* % 2) 1)) ; (1 2 4 8 16)
 ```
 
-## TODO: Exercises
+## Exercises
 
-1. create a stream of Fibonacci numbers
+### Lazy Fibonacci Numbers
+
+Write a function `lazy-fib` that returns a lazy sequence of Fibonacci
+numbers.
+
+Hint: Use `cons` and `lazy-seq` with a recursive function call to
+produce the next element. A multi-arity function (with zero and two
+arguments) is a good option to provide the initial two Fibonacci
+numbers.
+
+Test: `(take 10 (fib-stream))` shall return `(1 1 2 3 5 8 13 21 34
+55)`, and `(nth (fib-stream) 45)` shall return `1836311903`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn lazy-fib
+  ([] (fib-stream 1 1))
+  ([a b] (cons a (lazy-seq (lazy-fib b (+ a b))))))
+```
+{{% /expand %}}
+
+TODO:
+
 1. create a stream of prime numbers
 1. filter file with numbers and output prime numbers
