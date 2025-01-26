@@ -31,10 +31,10 @@ Destructure nested vectors:
 ```clojure
 (def songs-albums [["Wish" "FWX"] ["One" "Disconnected"] ["Monument" "Inside Out"]])
 
-(defn peek [[[first-song _] _ [_ third-album]]]
+(defn peek-into [[[first-song _] _ [_ third-album]]]
   (str "some song: " first-song ", some album: " third-album))
 
-(peek songs-albums) ; "some song: Wish, some album: Inside Out"
+(peek-into songs-albums) ; "some song: Wish, some album: Inside Out"
 ```
 
 Destructure other seqables:
@@ -56,6 +56,62 @@ Destructure strings into individual characters:
 
 (row-col "a5") ; "[a;5]"
 (row-col "x0") ; "[x;0]"
+```
+
+Destructure a map by its keys:
+
+```clojure
+(def band [{:firstname "Jim" :lastname "Matheos" :instrument "guitar"}
+           {:firstname "Bobby" :lastname "Jarzombek" :instrument "drums"}
+           {:firstname "Joey" :lastname "Vera" :instrument "bass"}])
+
+(defn describe-member [{name :firstname plays :instrument}]
+  (str name " plays " plays))
+
+(map describe-member band) ; ("Jim plays guitar" "Bobby plays drums" "Joey plays bass")
+```
+
+When destructuring maps, values come first, keys come second.
+
+Destructure a nested map:
+
+```clojure
+(def choices {:one {:song "Monument" :band "Fates Warning"}
+              :two {:song "Trial by Fire" :band "Judas Priest"}
+              :three {:song "Wrathchild" :band "Iron Maiden"}})
+
+(defn announce [{{song :song} :one {band :band} :three}]
+  (str "We start with the song " song " and finish with something from " band "."))
+
+(announce choices)
+;; "We start with the song Monument and finish with something from Iron Maiden."
+```
+
+Extract a given set of values from a map by providing their keys
+(`:keys`), filling in fallback values for missing keys (`:or`), and
+storing the argument in its entirety (`:as`):
+
+```clojure
+(def songs [{:title "Pale Fire"
+             :duration "4m17s"
+             :album "Inside Out"
+             :artist "Fates Warning"
+             :year 1994
+             :genre "Progressive Metal"}
+            {:title "Ghost in the Machine"
+             :duration "4m21s"
+             :album "Silicon Messiah"
+             :artist "Blaze Bayley"
+             :year 2000}])
+
+(defn describe-song [{:keys [:title :year :genre]
+                      :or {genre "Metal"}
+                      :as song}]
+  (str title " (" year ", " genre ") defines " (count song) " properties."))
+
+(map describe-song songs)
+;; ("Pale Fire (1994, Progressive Metal) defines 6 properties."
+;;  "Ghost in the Machine (2000, Metal) defines 5 properties."
 ```
 
 ## Exercises
