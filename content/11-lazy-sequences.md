@@ -221,19 +221,18 @@ file `result.txt` with the following content:
 (defn sum-up-to [source sink limit]
   (with-open [r (clojure.java.io/reader source)
               w (clojure.java.io/writer sink)]
-    (loop [lines (line-seq r)
-           acc 0]
-      (let [line (first lines)
-            x (try-parse line)]
-        (if (nil? line)
+    (let [lines (line-seq r)
+          parsed (map try-parse lines)]
+      (loop [numbers (filter #(not (nil? %)) parsed)
+             acc 0]
+        (if (empty? numbers)
           acc
-          (if x
-            (let [y (if x (+ acc x) acc)]
-              (if (> y limit)
-                acc
-                (do
-                  (.write w (str x "\n"))
-                  (recur (rest lines) y))))
-            (recur (rest lines) acc)))))))
+          (let [x (first numbers)
+                y (+ acc x)]
+            (if (> y limit)
+              acc
+              (do
+                (.write w (str x "\n"))
+                (recur (rest numbers) y)))))))))
 ```
 {{% /expand %}}
