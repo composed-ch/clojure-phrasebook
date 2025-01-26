@@ -57,3 +57,33 @@ Destructure strings into individual characters:
 (row-col "a5") ; "[a;5]"
 (row-col "x0") ; "[x;0]"
 ```
+
+## Exercises
+
+### Diagonal Distance
+
+Write a function `diag-dist` that accepts an two coordinates encoded
+in a single string of the form `[x1][y1][x2][y2]`, such as `"a1d5"`,
+indicating a move on a game board (e.g. from point `a1` to point
+`d5`). Calculate the diagonal distance of the points using Pythagoras'
+theorem.
+
+Hint: Destructure the string argument into four characters. Characters
+can be converted to their code point using `int`. Use the notation
+`\x` to refer to the character `x`.
+
+Test: `(diag-dist "a1d5")` shall return `5.0`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn diag-dist [[x1 y1 x2 y2]]
+  (let [x-dist (fn [x] (inc (- (int x) (int \a))))
+        x1 (x-dist x1)
+        x2 (x-dist x2)
+        y1 (int y1)
+        y2 (int y2)
+        dx (abs (- x1 x2))
+        dy (abs (- y1 y2))]
+    (Math/sqrt (+ (Math/pow dx 2) (Math/pow dy 2)))))
+```
+{{% /expand %}}
