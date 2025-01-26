@@ -116,6 +116,42 @@ storing the argument in its entirety (`:as`):
 
 ## Exercises
 
+### Parse CSV Lines
+
+Given the following CSV lines:
+
+```clojure
+(def lines ["Jim,Matheos,Guitar",
+            "Ray,Alder,Vocals",
+            "Bobby,Jarzombek,Drums",
+            "Joey,Vera,Bass",
+            "Michael,Abdow,Guitar"])
+```
+
+Write a function `to-records` that expects and destructures a
+three-element vector, and returns a map consisting of the values
+extracted with appropriate keys.
+
+Hint: Use `clojure.string/split` to turn the CSV lines into vectors.
+
+Test: `(->> lines (map #(clojure.string/split % #",")) (map
+to-records))` shall return the following sequence of maps:
+
+```clojure
+({:firstname "Jim", :lastname "Matheos", :plays "Guitar"}
+ {:firstname "Ray", :lastname "Alder", :plays "Vocals"}
+ {:firstname "Bobby", :lastname "Jarzombek", :plays "Drums"}
+ {:firstname "Joey", :lastname "Vera", :plays "Bass"}
+ {:firstname "Michael", :lastname "Abdow", :plays "Guitar"})
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(defn to-records [[firstname, lastname, plays]]
+  {:firstname firstname :lastname lastname :plays plays})
+```
+{{% /expand %}}
+
 ### Diagonal Distance
 
 Write a function `diag-dist` that accepts an two coordinates encoded
@@ -141,5 +177,42 @@ Test: `(diag-dist "a1d5")` shall return `5.0`.
         dx (abs (- x1 x2))
         dy (abs (- y1 y2))]
     (Math/sqrt (+ (Math/pow dx 2) (Math/pow dy 2)))))
+```
+{{% /expand %}}
+
+### Bonus Calculation
+
+Given a vector of banker maps:
+
+```clojure
+(def bankers [{:name "Patrick Bateman" :revenue 7345234.95 :rate 0.01125}
+              {:name "Marcus Halberstram" :revenue 945376.25 :rate 0.0125}
+              {:name "Paul Allen" :revenue 15913498.90 :rate 0.0175}
+              {:name "Timothy Bryce" :revenue 9754234.20 :rate 0.015}
+              {:name "Luis Carruthers" :revenue 2454397.55}])
+```
+
+Write a function `bonus` that destructures a given map, calculates a
+bonus as the product of the revenue and the rate, and returns a map
+consisting of the banker's name and bonus.
+
+Hint: Use a fallback value of `0.01` for the rate when destructuring
+the map.
+
+Test: `(map bonus bankers)` shall return the following sequence of maps:
+
+```clojure
+({:name "Patrick Bateman", :bonus 82633.8931875}
+ {:name "Marcus Halberstram", :bonus 11817.203125}
+ {:name "Paul Allen", :bonus 278486.23075000005}
+ {:name "Timothy Bryce", :bonus 146313.51299999998}
+ {:name "Luis Carruthers", :bonus 24543.9755})
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(defn bonus [{:keys [:name :revenue :rate]
+              :or {rate 0.01}}]
+  {:name name :bonus (* rate revenue)})
 ```
 {{% /expand %}}
