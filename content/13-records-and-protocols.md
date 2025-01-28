@@ -110,3 +110,80 @@ Create a one-off implementation for a protocol:
 
 Protocols can be implemented partially using `reify`, but calling
 missing functions causes runtime exceptions.
+
+## Exercises
+
+### Shape Protocol
+
+Define a protocol `Shape` with two functions `area` and `circumference`.
+
+Hint: Use `defprotocol`; the functions only need a `this` parameter.
+
+Test: `(area (reify Shape (area [this] 0)))` shall return `0`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defprotocol Shape
+  (area [this])
+  (circumference [this]))
+```
+{{% /expand %}}
+
+### Square and Circle Records
+
+Implement the `Shape` protocol for two new record types: `Rectangle`
+and `Circle`.
+
+Hint: Use `defprotocol`; the `Rectangle` has a `width` and a `height`;
+the `Circle` has a `radius`. Use `Math/PI` and `Math/pow` for
+computing the circle's area and circumference.
+
+Test: `(area (->Rectangle 3 4))` shall return `12`, and
+`(circumference (->Circle 5))` shall return `31.41592653589793`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defrecord Rectangle [width height]
+  Shape
+  (area [this]
+    (* (:width this) (:height this)))
+  (circumference [this]
+    (+ (* 2 (:width this)) (* 2 (:height this)))))
+
+(defrecord Circle [radius]
+  Shape
+  (area [this]
+    (* Math/PI (Math/pow (:radius this) 2.0)))
+  (circumference [this]
+    (* 2 Math/PI (:radius this))))
+```
+{{% /expand %}}
+
+### Volume Extension
+
+Define a protocol `Body` with a function `volume` that expects a
+`height` parameter. Extend the `Rectangle` and `Circle` records to
+implement `Body`. The function shall compute the volume of a cuboid
+(`Rectangle`) and a cylinder (`Circle`).
+
+Hint: Use `extend-protocol`. A cuboid's volume is the area of its
+rectangular base multiplied by a height; a cylinder's volume is the
+area of its circular base multiplied by a height.
+
+Test: `(volume (->Rectangle 3 4) 5)` shall return `60`, and `(volume
+(->Circle 5) 3)` shall return `235.61944901923448`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defprotocol Body
+  (volume [this height]))
+
+(extend-protocol Body
+  Rectangle
+  (volume [this height]
+    (* (area this) height))
+  Circle
+  (volume [this height]
+    (* (area this) height)))
+```
+{{% /expand %}}
