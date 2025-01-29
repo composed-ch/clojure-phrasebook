@@ -96,11 +96,32 @@ TODO: second part of the chapter on property-based tests
 
 ## Exercises
 
-TODO: provide proper exercises
+### Flexible Duration Parsing
 
-- Make all the tests pass by improving the implementation of the `parse-duration` function.
-  - Hint: Use the quantors `*` and/or `?`.
-  - Test: Run the tests.
+Make all the tests pass by improving the implementation of the given
+`parse-duration` function.
+
+Hint: Define additional matching groups and use the regular expression
+quantor `?` for optional groups.
+
+Test: The provided tests shall pass, e.g. `(parse-duration "3m")`
+shall return `180`, and `(parse-duration "17s")` shall return `17`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn parse-duration [dur]
+  (let [matcher (re-matcher #"^(([0-9]+)(m))?(([0-9]+)(s))?$" dur)
+        results (re-find matcher)
+        minutes (if (nil? (nth results 3)) 0 (Integer/parseInt (nth results 2)))
+        seconds (if (nil? (nth results 6)) 0 (Integer/parseInt (nth results 5)))]
+    (+ (* minutes 60) seconds)))
+```
+{{% /expand %}}
+
+TODO: additional tests
+
 - Define additional (yet failing) test cases in a group containing hour indications.
   - Hint: Use `testing` to group the tests, and `h` as an hour indication in the input string.
   - Test: Run the tests.
+
+TODO: exercises for property-based tests
