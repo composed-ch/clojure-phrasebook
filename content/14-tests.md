@@ -31,7 +31,7 @@ library:
   (:require [music.core :as music]))
 
 (deftest test-parse-duration
-  (is (music/parse-duration "3m15s") 195))
+  (is (= (music/parse-duration "3m15s") 195)))
 ```
 
 Run the test from the REPL:
@@ -57,12 +57,12 @@ Group tests together using `testing` with a description:
 ```clojure
 (deftest test-parse-duration
   (testing "minutes and seconds"
-    (is (music/parse-duration "3m15s") 195)
-    (is (music/parse-duration "6m12s") 312)
-    (is (music/parse-duration "2m51s") 171))
+    (is (= (music/parse-duration "3m15s") 195))
+    (is (= (music/parse-duration "6m12s") 312))
+    (is (= (music/parse-duration "2m51s") 171)))
   (testing "only minutes or seconds"
-    (is (music/parse-duration "3m") 180)
-    (is (music/parse-duration "17s") 17)))
+    (is (= (music/parse-duration "3m") 180))
+    (is (= (music/parse-duration "17s") 17))))
 ```
 
 The test fails because `parse-duration` cannot handle the input from
@@ -118,10 +118,47 @@ shall return `180`, and `(parse-duration "17s")` shall return `17`.
 ```
 {{% /expand %}}
 
-TODO: additional tests
+### Hours Duration Parsing
 
-- Define additional (yet failing) test cases in a group containing hour indications.
-  - Hint: Use `testing` to group the tests, and `h` as an hour indication in the input string.
-  - Test: Run the tests.
+Define additional (yet failing) test cases for duration containing
+hour indications, e.g. `"1h15m50s"`. Then extend the implementation of
+`parse-duration` in order to make the tests pass.
 
-TODO: exercises for property-based tests
+Hint: Use `testing` to group the tests, and `h` as an hour indication
+in the input string. Repeated multiplication with the factor `60` can
+be expressed using `reduce`.
+
+Test: `(parse-duration "2h5m3s")` shall return `7503`,
+`(parse-duration "1h10m")` shall return `4200`, and `(parse-duration
+"1h")` shall return 3600. All defined tests shall pass.
+
+{{% expand title="Solution" %}}
+Test:
+
+```clojure
+(ns music.core-test
+  (:require [clojure.test :refer :all])
+  (:require [music.core :as music]))
+
+(deftest test-parse-duration
+  (testing "hours, minutes, and seconds"
+    (is (= (music/parse-duration "2h5m3s") 7503)))
+  (testing "hours and minutes"
+    (is (= (music/parse-duration "1h10m") 4200)))
+  (testing "only hours"
+    (is (= (music/parse-duration "1h") 3600))))
+```
+
+Implementation:
+
+```clojure
+(defn parse-duration [dur]
+  (let [matcher (re-matcher #"^(([0-9]+)(h))?(([0-9]+)(m))?(([0-9]+)(s))?$" dur)
+        results (re-find matcher)
+        hours (if (nil? (nth results 3)) 0 (Integer/parseInt (nth results 2)))
+        minutes (if (nil? (nth results 6)) 0 (Integer/parseInt (nth results 5)))
+        seconds (if (nil? (nth results 9)) 0 (Integer/parseInt (nth results 8)))
+        values [hours minutes seconds]]
+    (reduce (fn [acc v] (+ (* acc 60) v)) values)))
+```
+{{% /expand %}}
