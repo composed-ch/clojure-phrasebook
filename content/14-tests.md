@@ -92,7 +92,76 @@ Run all the tests using Leiningen from the shell:
 lein test
 ```
 
-TODO: second part of the chapter on property-based tests
+Write a parametrized test using `are`:
+
+```clojure
+(deftest test-parse-durations
+  (are [input expected] (= (music/parse-duration input) expected)
+    "1s" 1
+    "1m" 60
+    "1m1s" 61
+    "2m3s" 123
+    "15m32s" 932))
+```
+
+Extend `:dependencies` in `project.clj` for test data generators:
+
+```clojure
+:dependencies [[org.clojure/clojure "1.11.1"] ; existing
+               [org.clojure/test.check "1.1.1"]] ; new
+```
+
+Install the additional dependency:
+
+```sh
+lein deps
+```
+
+Create a random test data generator for positive integers:
+
+```clojure
+(require '[clojure.test.check.generators :as gen])
+(def numbers-gen gen/pos-int)
+```
+
+Constrain the positive integers to non-zero values:
+
+```clojure
+(def non-zero-numbers-gen (gen/such-that (complement zero?) gen/pos-int))
+```
+
+Generate maps of test data:
+
+```clojure
+(def duration-gen (gen/hash-map :m non-zero-numbers-gen :s non-zero-numbers-gen))
+```
+
+Get a function that picks a random element from a generator:
+
+```clojure
+(gen/elements duration-gen)
+```
+
+Write a _property-based_ test that exercises a property on 100
+generated inputs:
+
+```clojure
+(ns music.core-test
+  (:require [clojure.test :refer :all])
+  (:require [clojure.test.check :as tc])
+  (:require [clojure.test.check.clojure-test :as ctest])
+  (:require [clojure.test.check.generators :as gen])
+  (:require [clojure.test.check.properties :as prop])
+  (:require [music.core :as music]))
+
+(def non-zero-numbers-gen (gen/such-that (complement zero?) gen/pos-int))
+(def duration-gen (gen/hash-map :m non-zero-numbers-gen :s non-zero-numbers-gen))
+
+(ctest/defspec parse-duration-not-zero 100
+  (prop/for-all [duration duration-gen]
+                (let [dur (str (:m duration) "m" (:s duration) "s")]
+                  (> (music/parse-duration dur) 0))))
+```
 
 ## Exercises
 
@@ -160,5 +229,44 @@ Implementation:
         seconds (if (nil? (nth results 9)) 0 (Integer/parseInt (nth results 8)))
         values [hours minutes seconds]]
     (reduce (fn [acc v] (+ (* acc 60) v)) values)))
+```
+{{% /expand %}}
+
+### Property-Based Hypotenuse Test
+
+Given a function that calculates the hypotenuse given the triangle's
+short sides:
+
+```clojure
+(defn hypot [a b]
+  (Math/sqrt (+ (Math/pow a 2) (Math/pow b 2))))
+
+(hypot 3 4) ; 5.0
+```
+
+Write a property-based `hypot-longest-side` test to ensure that the
+hypotenuse is longer than both `a` and `b`, but shorter than their
+sum. Run it for a million samples.
+
+Hint: Use the `pos-int` generator from above to generate the test data.
+
+Test: All tests shall pass using `lein run`.
+
+{{% expand title="Solution" %}}
+```clojure
+(ns music.core-test
+  (:require [clojure.test :refer :all])
+  (:require [clojure.test.check :as tc])
+  (:require [clojure.test.check.clojure-test :as ctest])
+  (:require [clojure.test.check.generators :as gen])
+  (:require [clojure.test.check.properties :as prop]))
+
+(def pos-int (gen/such-that (complement zero?) gen/pos-int))
+
+(ctest/defspec hypot-longest-side 1e6
+  (prop/for-all [a pos-int
+                 b pos-int]
+                (let [c (hypot a b)]
+                  (and (> c a) (> c b) (< c (+ a b))))))
 ```
 {{% /expand %}}
