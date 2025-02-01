@@ -41,3 +41,19 @@ Combine predicates using _or_ logic:
 ```
 
 The additional keyword preceding the predicate function is required for feedback.
+
+Create a spec for collections of certain things:
+
+```clojure
+(def str-coll (s/coll-of string?))
+(s/valid? str-coll ["this" "and" "that"]) ; true
+(s/valid? str-coll ["this" :and "that"]) ; false
+```
+
+Create a spec with rules for succession:
+
+```clojure
+(def chess-move (s/cat :s1 string? :n1 number? :s2 string? :n2 number?))
+(s/valid? chess-move ["A" 3 "C" 5]) ; true
+(s/valid? chess-move [:A 3 "C" "5"]) ; false
+```
