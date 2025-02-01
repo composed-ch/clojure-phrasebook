@@ -171,4 +171,6 @@ Activate the function spec:
 
 ## Exercises
 
-TODO
+- write spec for song map and test it
+- write spec for album map containing multiple songs
+- write spec for existing parse-duration function and apply it
