@@ -57,3 +57,118 @@ Create a spec with rules for succession:
 (s/valid? chess-move ["A" 3 "C" 5]) ; true
 (s/valid? chess-move [:A 3 "C" "5"]) ; false
 ```
+
+Specify required and optional keys for a map:
+
+```clojure
+(def employee
+  (s/keys :req-un [:acme.core/name
+                   :acme.core/salary]
+          :opt-un [:acme.core/revenue]))
+```
+
+The `req` and `opt` in `:req-un` and `:opt-un` stand for _required_
+and _optional_, respectively. The `un` stands for _unqualified_: The
+keys in the spec are namespace-qualified, but the ones in the
+validated maps need not be:
+
+```clojure
+(s/valid? employee {:name "Dilbert" :salary 120000}) ; true
+(s/valid? employee {:name "Topper" :salary 130000 :revenue 500000}) ; true
+(s/valid? employee {:name "Dogbert" :salary 150000 :position "consultant"}) ; true
+(s/valid? employee {:name "Ashok"}) ; false
+```
+
+Use keyword shortcuts when defining specs in their respective namespace:
+
+```clojure
+(def employee
+  (s/keys :req-un [::name ::salary]
+          :opt-un [::revenue]))
+```
+
+Register and use a spec globally:
+
+```clojure
+(s/def :acme.core/employee employee)
+(s/valid? :acme.core/employee {:name "Alice" :salary 115000}) ; true
+```
+
+Same, but using shortcuts for the keywords within the same namespace:
+
+```clojure
+(s/def ::employee employee)
+(s/valid? ::employee {:name "Alice" :salary 115000}) ; true
+```
+
+Further constrain the values for the specified keys in the map:
+
+```clojure
+(def employee
+  (s/keys :req-un [::name ::salary]
+          :opt-un [::revenue]))
+
+(s/def ::name string?)
+(s/def ::salary number?)
+(s/def ::revenue number?)
+
+(s/valid? ::employee {:name "Alice" :salary 115000}) ; true
+(s/valid? ::employee {:name :alice :salary 115000}) ; false
+(s/valid? ::employee {:name "Alice" :salary "too little"}) ; false
+```
+
+Explain the cause of a spec mismatch:
+
+```clojure
+(s/explain ::employee {:name :alice :salary 115000})
+;; :alice - failed: string? in: [:name] at: [:name] spec: :acme.core/name
+(s/explain ::employee {:name "Alice" :salary "too little"})
+;; "too little" - failed: number? in: [:salary] at: [:salary] spec: :acme.core/salary
+```
+
+Return value for matching spec, and `invalid` for mismatch:
+
+```clojure
+(s/conform ::employee {:name "Alice" :salary 115000}) ; {:name "Alice", :salary 115000}
+(s/conform ::employee {:name :alice :salary 115000}) ; :clojure.spec.alpha/invalid
+```
+
+Define a function for which to write a spec for:
+
+```clojure
+(defn calc-bonus [employee percentage]
+  (let [factor (/ percentage 100)]
+    (+ (if (:revenue employee)
+         (* factor (:revenue employee))
+         0)
+       (* (:salary employee) factor))))
+
+(calc-bonus {:name "Alice" :salary 115000} 1.25) ; 1437.5
+(calc-bonus {:name "Topper" :salary 130000 :revenue 500000} 1.25) ; 7875.0
+```
+
+Create a spec for the function's arguments and return values:
+
+```clojure
+(s/fdef calc-bonus
+  :args (s/cat :employee ::employee
+               :percentage number?)
+  :ret number?)
+```
+
+Activate the function spec:
+
+```clojure
+(require '[clojure.spec.test.alpha :as stest])
+(st/instrument 'acme.core/calc-bonus)
+
+(calc-bonus {:name "Alice" :salary 115000} 1.25) ; 1437.5
+
+(calc-bonus {:name "Alice"} 1.25)
+;; Execution error - invalid arguments to acme.core/calc-bonus at (REPL:94).
+;; {:name "Alice"} - failed: (contains? % :salary) at: [:employee] spec: :acme.core/employee
+```
+
+## Exercises
+
+TODO
