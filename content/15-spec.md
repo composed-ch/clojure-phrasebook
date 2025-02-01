@@ -171,6 +171,47 @@ Activate the function spec:
 
 ## Exercises
 
-- write spec for song map and test it
-- write spec for album map containing multiple songs
-- write spec for existing parse-duration function and apply it
+For the following exercises, a Leiningen project called `music` and a
+`music.core` module in `music/src/music/core.clj` is assumed.
+
+### Songs and Musicians
+
+Write two specs for maps:
+
+1. for a song with a name and a duration string, and
+2. for a musician with a name and an instrument.
+
+Hint: Use the `clojure.spec.alpha/keys` function and the `string?`
+predicate.
+
+Test: TODO
+
+Solution: TODO
+
+### Bands and Albums
+
+Write two specs for maps:
+
+1. for a band with a name and a vector of musicians, and
+2. for an album with a name and a vector of songs.
+
+Hint: Use the `keys` and `coll-of` function from the
+`clojure.spec.alpha` namespace.
+
+Test: TODO
+
+Solution: TODO
+
+### Song and Album Duration
+
+Write a spec for the [`parse-duration`
+function](/14-tests/#flexible-duration-parsing). It shall accept a
+string and return an integer.
+
+Hint: Copy the function's code into the current project. Use the
+`fdef` function from the `clojure.spec.alpha` namespace and the
+`instrument` function from the `clojure.spec.test.alpha` namespace.
+
+Test: TODO
+
+Solution: TODO
