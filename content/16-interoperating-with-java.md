@@ -107,3 +107,30 @@ Java objects are mutable:
 (.add songs "Monument")
 (map str songs) ; ("Pale Fire" "Monument")
 ```
+
+## Exercises
+
+### AWT Rectangles
+
+Write two functions, `area` and `circumference`, that compute the area
+and circumference, respectively, for a `java.awt.Rectangle`.
+
+Hint: Use the public `.width` and `.height` fields.
+
+### String Concatenation
+
+Write a function `concat` that returns a string of the concatenated
+items of the seqable given as an argument. The concatenation shall be
+performed _in-place_ using the `java.util.StringBuilder` class.
+
+Hint: Use the `.toString` method to turn the individual items into
+strings.
+
+### CamelCase
+
+Write a function `camel-case` that converts Clojure identifiers to CamelCase.
+
+Hint: Use the class
+[`CaseUtils`](https://commons.apache.org/proper/commons-text/apidocs/org/apache/commons/text/CaseUtils.html)
+from the Apache Commons Text package
+`org.apache.commons.commons-text`.
