@@ -42,6 +42,9 @@ Get the value and the symbol behind a var:
 (.-sym #'song) ; song
 ```
 
+With `.get`, the `get` _method_ is invoked; with `.-sym`, the `sym` _field_ is
+accessed. See also [Interoperating with Java](/16-interoperating-with-java/).
+
 Create a _dynamic_ var:
 
 ```clojure
