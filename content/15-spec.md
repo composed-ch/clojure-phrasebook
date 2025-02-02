@@ -3,13 +3,6 @@ title = "Spec"
 weight = 15
 +++
 
-Extend `:dependencies` in `project.clj` to use `clojure.spec` (still alpha):
-
-```clojure
-:dependencies [[org.clojure/clojure "1.11.1"]
-               [org.clojure/clojure "1.12.0"]]
-```
-
 Use `clojure.spec` from the REPL:
 
 ```clojure
@@ -160,7 +153,7 @@ Activate the function spec:
 
 ```clojure
 (require '[clojure.spec.test.alpha :as stest])
-(st/instrument 'acme.core/calc-bonus)
+(stest/instrument 'acme.core/calc-bonus)
 
 (calc-bonus {:name "Alice" :salary 115000} 1.25) ; 1437.5
 
@@ -172,11 +165,17 @@ Activate the function spec:
 ## Exercises
 
 For the following exercises, a Leiningen project called `music` and a
-`music.core` module in `music/src/music/core.clj` is assumed.
+`music.core` module in `music/src/music/core.clj` with the following
+content is assumed:
+
+```clojure
+(ns music.core
+  (:require [clojure.spec.alpha :as s]))
+```
 
 ### Songs and Musicians
 
-Write two specs for maps:
+Write and register two specs for maps:
 
 1. for a song with a name and a duration string, and
 2. for a musician with a name and an instrument.
@@ -184,13 +183,28 @@ Write two specs for maps:
 Hint: Use the `clojure.spec.alpha/keys` function and the `string?`
 predicate.
 
-Test: TODO
+Test:
 
-Solution: TODO
+```clojure
+(s/valid? ::song {:name "Pale Fire" :duration "4m17s"}) ; true
+(s/valid? ::song {:name "Pale Fire" :duration 257}) ; false
+(s/valid? ::musician {:name "Jim Matheos" :instrument "Guitar"}) ; true
+(s/valid? ::musician {:name "Jim Matheos" :instrument :keytar}) ; false
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(s/def ::name string?)
+(s/def ::duration string?)
+(s/def ::instrument string?)
+(s/def ::song (s/keys :req-un [::name ::duration]))
+(s/def ::musician (s/keys :req-un [::name ::instrument]))
+```
+{{% /expand %}}
 
 ### Bands and Albums
 
-Write two specs for maps:
+Write and register two specs for maps:
 
 1. for a band with a name and a vector of musicians, and
 2. for an album with a name and a vector of songs.
@@ -198,9 +212,39 @@ Write two specs for maps:
 Hint: Use the `keys` and `coll-of` function from the
 `clojure.spec.alpha` namespace.
 
-Test: TODO
+Test:
 
-Solution: TODO
+```clojure
+(def jim {:name "Jim Matheos" :instrument "Guitar"})
+(def ray {:name "Ray Alder" :instrument "Vocals"})
+(def fates-warning {:name "Fates Warning" :members [jim ray]})
+(def coldplay {:name "Coldplay" :members [:chris :jonny]})
+
+(def pale-fire {:name "Pale Fire" :duration "4m17s"})
+(def apparition {:name "The Apparition" :duration "5m50s"})
+(def best-of {:name "Best of Fates Warning" :songs [pale-fire apparition]})
+(def worst-of {:name "Best of Coldplay" :songs [:viva-la-vida :clocks]})
+
+(s/valid? ::band fates-warning) ; true
+(s/valid? ::band coldplay) ; false
+(s/valid? ::album best-of) ; true
+(s/valid? ::album worst-of) ; false
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(s/def ::name string?)
+(s/def ::duration string?)
+(s/def ::instrument string?)
+(s/def ::song (s/keys :req-un [::name ::duration]))
+(s/def ::musician (s/keys :req-un [::name ::instrument]))
+
+(s/def ::members (s/coll-of ::musician))
+(s/def ::songs (s/coll-of ::song))
+(s/def ::band (s/keys :req-un [::name ::members]))
+(s/def ::album (s/keys :req-un [::name ::songs]))
+```
+{{% /expand %}}
 
 ### Song and Album Duration
 
@@ -212,6 +256,21 @@ Hint: Copy the function's code into the current project. Use the
 `fdef` function from the `clojure.spec.alpha` namespace and the
 `instrument` function from the `clojure.spec.test.alpha` namespace.
 
-Test: TODO
+Test:
 
-Solution: TODO
+```clojure
+(require '[clojure.spec.test.alpha :as stest])
+(stest/instrument 'music.core/parse-duration)
+(parse-duration "3m15s") ; 195
+(parse-duration 300)
+;; Execution error - invalid arguments to music.core/parse-duration at (REPL:106).
+;; 300 - failed: string? at: [:dur]
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(s/fdef parse-duration
+  :args (s/cat :dur string?)
+  :ret number?)
+```
+{{% /expand %}}
