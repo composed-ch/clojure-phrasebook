@@ -184,15 +184,12 @@ Write a function `camel-case` that converts Clojure identifiers to CamelCase.
 Hint: Use the class
 [`CaseUtils`](https://commons.apache.org/proper/commons-text/apidocs/org/apache/commons/text/CaseUtils.html)
 from the Apache Commons Text package
-`org.apache.commons.commons-text`.
+`org.apache.commons.commons-text`. Use `char-array` to convert a
+seqable of characters to a Java array (required to pass varargs).
 
 Test: `(camel-case "private-field-accessor-util")` shall return `"PrivateFieldAccessorUtil"`.
 
 {{% expand title="Solution" %}}
-
-> [!NOTE]
-> The implementation looks correct, but throws an error.
-
 `project.clj`:
 
 ```clojure
@@ -207,6 +204,6 @@ Test: `(camel-case "private-field-accessor-util")` shall return `"PrivateFieldAc
   (:import org.apache.commons.text.CaseUtils))
 
 (defn camel-case [kebap]
-  (CaseUtils/toCamelCase kebap true (to-array [\-])))
+  (CaseUtils/toCamelCase kebap true (char-array [\-])))
 ```
 {{% /expand %}}
