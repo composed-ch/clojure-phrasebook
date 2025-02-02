@@ -110,12 +110,15 @@ Java objects are mutable:
 
 ## Exercises
 
-### AWT Rectangles
+### Rectangle Enclosure
 
-Write two functions, `area` and `circumference`, that compute the area
-and circumference, respectively, for a `java.awt.Rectangle`.
+Write a function `encloses?` that expects two `java.awt.Rectangle`
+instances as arguments and returns `true` if the first rectangle
+completely encloses the second rectangle, and `false` otherwise.
 
-Hint: Use the public `.width` and `.height` fields.
+Hint: The first two constructor arguments describe the `x` and `y`
+position of the rectangle's upper-left corner. Access the relevant
+properties using `.-x`, `.-y`, `.-width`, and `.-height`.
 
 ### String Concatenation
 
