@@ -55,4 +55,104 @@ Same, but with many threads:
 (map (memfn join) threads)
 ```
 
-TODO: promises and futures
+Deliver a result through a _promise_:
+
+```clojure
+(def result (promise))
+(deliver result 42)
+
+(deref result) ; 42
+@result ; 42
+```
+
+`@result` is syntactic sugar for `(deref result)`. A value can only be
+delivered once, but derefed multiple times.
+
+```clojure
+(deliver result 99)
+@result ; still 42
+```
+
+Use a promise to communicate between threads:
+
+```clojure
+(defn sum-prom [from to]
+  (let [n (inc (- to from))
+        result (promise)
+        thread (Thread. #(deliver result (reduce + (take n (iterate inc from)))))]
+    (.start thread)
+    result))
+
+(deref (sum-from-to 1 1e6)) ; 500000500000
+@(sum-prom 1 1e6) ; 500000500000
+```
+
+Simplify concurrent code using a _future_, which is a promise with its
+own thread:
+
+```clojure
+(defn sum-fut [from to]
+  (let [n (inc (- to from))
+        f (future (reduce + (take n (iterate inc from))))]
+    f))
+
+(deref (sum-fut 1 1e6)) ; 500000500000
+@(sum-fut 1 1e6) ; 500000500000
+```
+
+Use a timeout to deliver a fallback value if a computation takes too long:
+
+```clojure
+(defn sum-from-to [from to]
+  (let [n (inc (- to from))]
+    (reduce + (take n (iterate inc from)))))
+
+(def f (future (sum-from-to 1 1e6)))
+(deref f 500 "computation took too long") ; 500000500000
+
+(def f (future (sum-from-to 1 1e7)))
+(deref f 500 "computation took too long") ; "computation took too long"
+```
+
+## Exercises
+
+### Time Announcer
+
+Write a function `announce-time` that expects a parameter `freq` and
+prints the current date and time every `freq` seconds in a separate
+thread.
+
+Hint: Use `java.util.Date` and its `toString` method to get the
+current date/time string. Use `Thread/sleep` to wait for a given
+amount of milliseconds.
+
+### Prime Factors Promise
+
+Write a function `factor-prom` that expects a parameter `x`, which is
+an integer to be factorized into its prime factors, and returns a
+promise that delivers a sequence of that number's prime factors.
+
+Hint: Use the solution for the [Lazy Prime
+Numbers](/11-lazy-sequences/#lazy-prime-numbers) exercise to get
+candidates for prime factors.
+
+### Prime Factors Future
+
+Write a function `factor-fut` that performs the same computation as
+`factor-prom` from the exercise before, but returns a future instead
+of a promise.
+
+Hint: Start from `factor-prom` of the last exercise and simplify its
+code.
+
+### Map in Parallel
+
+Write a function `factor` that performs prime factorization without
+any promises or futures and calculates the prime factors
+synchronuously.
+
+Then write a function `factors` that accepts a sequence of numbers,
+which shall be factorized using the `factor` function just written,
+but doing so in parallel.
+
+Hint: Use the `pmap` function as a concurrent version of `map`.
