@@ -118,13 +118,16 @@ Use a timeout to deliver a fallback value if a computation takes too long:
 
 ### Time Announcer
 
-Write a function `announce-time` that expects a parameter `freq` and
-prints the current date and time every `freq` seconds in a separate
-thread.
+Write a function `every` that expects a parameter `millis` and
+`f`. The function shall execute `f` in an infinite loop, but pause for
+the given amount of milliseconds.
 
-Hint: Use `java.util.Date` and its `toString` method to get the
-current date/time string. Use `Thread/sleep` to wait for a given
-amount of milliseconds.
+Then write a function `announce-time` that expects a parameter `freq`
+and prints the current date and time every `freq` seconds using
+`every` in a separate thread.
+
+Hint: Use `java.util.Date` to get the current date/time string. Use
+`Thread/sleep` to wait for a given amount of milliseconds.
 
 ### Prime Factors Promise
 
