@@ -116,18 +116,59 @@ Use a timeout to deliver a fallback value if a computation takes too long:
 
 ## Exercises
 
-### Time Announcer
+### Countdown
 
-Write a function `every` that expects a parameter `millis` and
-`f`. The function shall execute `f` in an infinite loop, but pause for
-the given amount of milliseconds.
+Write a function `countdown` that expects a `name` and a number `n`
+from which to count down to zero. Print the name and the number, which
+is to be counted down, and then pause for a second. Continue printing
+until the number reached zero.
 
-Then write a function `announce-time` that expects a parameter `freq`
-and prints the current date and time every `freq` seconds using
-`every` in a separate thread.
+Then write a function `launch-rockets` that expects a number `n` (the
+number of rockets to be launched) and `sec` (the number of seconds
+from which to count down to zero). Create one thread per rocket,
+i.e. `n` threads, which execute the `contdown` function with the name
+`rocket X`, where `X` is a number from `1` to `n`. Start those threads.
 
-Hint: Use `java.util.Date` to get the current date/time string. Use
-`Thread/sleep` to wait for a given amount of milliseconds.
+Hint: Use `(locking *out* (println OUTPUT))` to make the output in
+`countdown` thread-safe.
+
+Test: `(launch-rockets 3 4)` shall produce the following (non-deterministic) output:
+
+```plain
+rocket 1: 4
+rocket 2: 4
+rocket 3: 4
+rocket 1: 3
+rocket 2: 3
+rocket 3: 3
+rocket 1: 2
+rocket 2: 2
+rocket 3: 2
+rocket 1: 1
+rocket 2: 1
+rocket 3: 1
+rocket 1: 0
+rocket 3: 0
+rocket 2: 0
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(defn countdown [name n]
+  (loop [i n]
+    (locking *out*
+      (println (str name ": " i)))
+    (Thread/sleep 1000)
+    (when (> i 0)
+      (recur (dec i)))))
+
+(defn launch-rockets [n sec]
+  (let [func (fn [s] #(countdown s sec))
+        rockets (map #(str "rocket " %) (take n (iterate inc 1)))
+        threads (map #(Thread. (func %)) rockets)]
+    (map (memfn start) threads)))
+```
+{{% /expand %}}
 
 ### Prime Factors Promise
 
