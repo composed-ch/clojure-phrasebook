@@ -170,25 +170,6 @@ rocket 2: 0
 ```
 {{% /expand %}}
 
-### Prime Factors Promise
-
-Write a function `factor-prom` that expects a parameter `x`, which is
-an integer to be factorized into its prime factors, and returns a
-promise that delivers a sequence of that number's prime factors.
-
-Hint: Use the solution for the [Lazy Prime
-Numbers](/11-lazy-sequences/#lazy-prime-numbers) exercise to get
-candidates for prime factors.
-
-### Prime Factors Future
-
-Write a function `factor-fut` that performs the same computation as
-`factor-prom` from the exercise before, but returns a future instead
-of a promise.
-
-Hint: Start from `factor-prom` of the last exercise and simplify its
-code.
-
 ### Map in Parallel
 
 Write a function `factor` that performs prime factorization without
@@ -199,4 +180,72 @@ Then write a function `factors` that accepts a sequence of numbers,
 which shall be factorized using the `factor` function just written,
 but doing so in parallel.
 
-Hint: Use the `pmap` function as a concurrent version of `map`.
+Hint: [Integer factorization
+(Wikipedia)](https://en.wikipedia.org/wiki/Integer_factorization)
+describes how a number can be factorized into its prime factors. Use
+the solution for the [Lazy Prime
+Numbers](/11-lazy-sequences/#lazy-prime-numbers) exercise to get
+candidates for prime factors. Use the `pmap` function as a concurrent
+version of `map`.
+
+Test: `(factor (factors (take 10 (iterate inc 10)))` shall return `([2 5] [11]
+[2 2 3] [13] [2 7] [3 5] [2 2 2 2] [17] [2 3 3] [19])`.
+
+{{% expand title="Solution" %}}
+```clojure
+;; lazy-primes from chapter 11
+
+(defn factor [x]
+  (loop [x x
+         acc []
+         candidates (lazy-primes)]
+    (let [c (first candidates)]
+      (cond
+        (= x 1) acc
+        (= (mod x c) 0) (recur (/ x c) (conj acc c) candidates)
+        (< c x) (recur x acc (rest candidates))
+        :else (conj acc x)))))
+
+(defn factors [xs]
+  (pmap factor xs))
+```
+{{% /expand %}}
+
+### Prime Factors Promise
+
+Write a function `factor-prom` that expects a parameter `x`, which is
+an integer to be factorized into its prime factors, and returns a
+promise that delivers a sequence of that number's prime factors.  The
+actual computation shall take place in its own thread.
+
+Hint: Re-use the `factor` function from the last exercise.
+
+Test: `@(factor-prom 324)` shall return `[2 2 3 3 3 3]`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn factor-prom [x]
+  (let [prom (promise)
+        thread (Thread. #(deliver prom (factor x)))]
+    (.start thread)
+    prom))
+```
+{{% /expand %}}
+
+### Prime Factors Future
+
+Write a function `factor-fut` that performs the same computation as
+`factor-prom` from the exercise before, but returns a future instead
+of a promise.
+
+Hint: Start from `factor-prom` of the last exercise and simplify its
+code.
+
+Test: `@(factor-fut 324)` shall return `[2 2 3 3 3 3]`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defn factor-fut [x]
+  (future (factor x)))
+```
+{{% /expand %}}
