@@ -107,3 +107,43 @@ magnitude of 100 milliseconds.
             result)))
 ```
 {{% /expand %}}
+
+### Function Call Tracker
+
+Expanding the solution from the last exercise, define an additional
+var `fib-agent` that holds a map to be initialized as `{:memoized 0
+:recursive 0}`.
+
+Write a function `log-call` that expects a parameter `kind` (either
+`:memoized` or `:recursive`). The function increments the value to the
+respective key by one.
+
+Then extend `fib-mem` so that it invokes `log-call` whenever the
+function is called.
+
+Hint: Invoke `log-call` as the first thing in `fib-mem`. Use the
+`send` function to call the agent.
+
+Test: After calling `(fib-mem 10)`, `@fib-agent` shall return
+`{:memoized 19, :recursive 0}`.
+
+{{% expand title="Solution" %}}
+```clojure
+(def fib-agent (agent {:memoized 0 :recursive 0}))
+
+(defn log-call [kind]
+  (when (contains? @fib-agent kind)
+    (send fib-agent #(assoc % kind (inc (get % kind))))))
+
+(def fib-cache (atom {}))
+
+(defn fib-mem [n]
+  (log-call :memoized)
+  (cond
+    (< n 2) 1
+    (contains? @fib-cache n) (get @fib-cache n)
+    :else (let [result (+ (fib-mem (- n 2)) (fib-mem (- n 1)))]
+            (swap! fib-cache #(assoc % n result))
+            result)))
+```
+{{% /expand %}}
