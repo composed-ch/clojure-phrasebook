@@ -121,11 +121,15 @@ respective key by one.
 Then extend `fib-mem` so that it invokes `log-call` whenever the
 function is called.
 
+Now write a function `fib` that expects a parameter `n` and computes
+the nth Fibonacci number using plain recursion. Use the same agent to
+track the calls to this function, but using the `:recursive` key.
+
 Hint: Invoke `log-call` as the first thing in `fib-mem`. Use the
 `send` function to call the agent.
 
-Test: After calling `(fib-mem 10)`, `@fib-agent` shall return
-`{:memoized 19, :recursive 0}`.
+Test: After calling `(fib-mem 10)` and `(fib 10)`, `@fib-agent` shall
+return `{:memoized 19, :recursive 177}`.
 
 {{% expand title="Solution" %}}
 ```clojure
@@ -145,5 +149,12 @@ Test: After calling `(fib-mem 10)`, `@fib-agent` shall return
     :else (let [result (+ (fib-mem (- n 2)) (fib-mem (- n 1)))]
             (swap! fib-cache #(assoc % n result))
             result)))
+
+(defn fib [n]
+  (log-call :recursive)
+  (if (< n 2)
+    1
+    (+ (fib (- n 2)) (fib (- n 1)))))
+
 ```
 {{% /expand %}}
