@@ -158,3 +158,33 @@ return `{:memoized 19, :recursive 177}`.
 
 ```
 {{% /expand %}}
+
+### Selling Stock in Transactions
+
+Given the following inventory of products:
+
+```clojure
+[{:name "Apple" :quantity 143 :price 0.55}
+ {:name "Sausage" :quantity 17 :price 3.98}
+ {:name "Milk" :quantity 198 :price 1.65}
+ {:name "Coffee" :quantity 23 :price 7.95}
+ {:name "Bread" :quantity 32 :price 2.45}]
+```
+
+Write a function `sell` that accepts two parameters `name` and
+`amount`, and returns the total price of the items sold, or `nil` if
+there is no such item in the inventory, or if the given amount
+surmounts the available quantity.
+
+The function not only calculates the price, but has following side effects:
+
+1. The amount is subtracted from the quantity.
+2. The total price as to be added to the revenue account.
+3. For every sell, `8.1%` of the selling price has to be added to the VAT account.
+
+Hint: Wrap the inventory, the revenue, and the VAT in a `ref`. Update
+the refs together using `dosync` and `alter`.
+
+Test: TODO
+
+Solution: TODO
