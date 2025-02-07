@@ -80,4 +80,16 @@ Before using refs, consider aggregating the values to a map wrapped by an atom.
 
 ## Exercises
 
-TODO
+### Memoized Fibonacci
+
+Define a var `fib-cache` that holds and atom to a map. Write a
+function `fib-mem` that expects a parameter `n`. The function shall
+compute the nth Fibonacci number, but cache the results in
+`fib-cache`.
+
+Hint: Only compute the result if it's not to be found in the
+cache. After calculating the result, update `fib-cache` using `swap!`.
+
+Test: `(fib-mem 60)` shall return `2504730781961` and finish within
+reasonable time, i.e. `(time (fib-mem 60))` shall finish within the
+magnitude of 100 milliseconds.
