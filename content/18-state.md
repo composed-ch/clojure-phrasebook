@@ -180,11 +180,36 @@ The function not only calculates the price, but has following side effects:
 
 1. The amount is subtracted from the quantity.
 2. The total price as to be added to the revenue account.
-3. For every sell, `8.1%` of the selling price has to be added to the VAT account.
+3. For every sale, `8.1%` of the selling price has to be added to the VAT account.
 
 Hint: Wrap the inventory, the revenue, and the VAT in a `ref`. Update
 the refs together using `dosync` and `alter`.
 
-Test: TODO
+Test: `(sell 15 "Apple")` shall return `8.25`; then `@revenue` shall
+return `8.25`, `@VAT` shall return `0.66825`, and `@inventory` shall
+return:
 
-Solution: TODO
+```clojure
+[{:name "Apple" :quantity 128 :price 0.55}
+;; …
+]
+```
+
+{{% expand title="Solution" %}}
+```clojure
+(defn sell [name amount]
+  (let [this-pred #(= (:name %) name)
+        item (first (filter this-pred @inventory))]
+    (if (and item (>= (:quantity item) amount))
+      (let [total (* amount (:price item))
+            vat (* total 0.081)
+            new-item (assoc item :quantity (- (:quantity item) amount))
+            rest-pred (complement this-pred)]
+        (dosync
+         (alter inventory #(conj (filter rest-pred %) new-item))
+         (alter revenue #(+ % total))
+         (alter VAT #(+ % vat)))
+        total)
+      nil)))
+```
+{{% /expand %}}
