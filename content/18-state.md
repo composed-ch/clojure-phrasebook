@@ -93,3 +93,17 @@ cache. After calculating the result, update `fib-cache` using `swap!`.
 Test: `(fib-mem 60)` shall return `2504730781961` and finish within
 reasonable time, i.e. `(time (fib-mem 60))` shall finish within the
 magnitude of 100 milliseconds.
+
+{{% expand title="Solution" %}}
+```clojure
+(def fib-cache (atom {}))
+
+(defn fib-mem [n]
+  (cond
+    (< n 2) 1
+    (contains? @fib-cache n) (get @fib-cache n)
+    :else (let [result (+ (fib-mem (- n 2)) (fib-mem (- n 1)))]
+            (swap! fib-cache #(assoc % n result))
+            result)))
+```
+{{% /expand %}}
