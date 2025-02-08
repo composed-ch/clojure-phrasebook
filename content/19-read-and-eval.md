@@ -72,8 +72,8 @@ Save the following song data to disk, e.g. under `/tmp/songs.clj`:
 {:name "Lord of the Flies" :band "Iron Maiden" :album "The X Factor" :year 1995}
 ```
 
-Write function `songs-from-file` that expects a path as parameter and
-returns a vector of songs.
+Write a function `songs-from-file` that expects a path as parameter
+and returns a vector of songs.
 
 Hint: Use `slurp` to read the data. Use `clojure.string/split-lines`
 to separate the string into lines. Use `read` to turn the lines into
@@ -85,8 +85,40 @@ TODO: Solution
 
 ### Read Transformation Functions
 
-TODO: functions with meta data (filter or map: predicate or transformer)
+Save the following code to disk, e.g. under `/tmp/funcs.clj`:
 
-### Filter Songs Using Predicates
+```clojure
+(with-meta (fn [s] (< (:year s) 1990)) {:kind :filter})
+(with-meta (fn [s] (clojure.string/includes? (:name s) "Dream")) {:kind :filter})
+(with-meta (fn [s] (= (:band s) "Fates Warning")) {:kind :filter})
+(with-meta (fn [s] (str (:name s) "(" (:album s) ", " (:year s) ")")) {:kind :mapper})
+```
 
+Write a function `funcs-from-file` that expects a path as parameter
+and returns a vector of functions.
 
+Test: `(count (funcs-form-file "/tmp/funcs.clj"))` shall return 4.
+
+TODO: Solution
+
+### Song Processing Pipeline
+
+Write a function `run-pipeline` that expects a sequence of songs (as
+from the first exercise) and a sequence of functions (as from the
+second exercise). The function shall process the given songs using the
+given functions to be executed as a pipeline, i.e. one by one
+according to its metadata: If a function is of the kind `:filter`, it
+shall be executed as a predicate to `filter`; if it is of the kind
+`:mapper`, it sh all be executed as a transformer to `map`.
+
+Hint: Use the `meta` function to access the metadata of the pipeline
+function.
+
+Test: `(run-pipelien (songs-from-file "/tmp/songs.clj")
+(funcs-from-file "/tmp/funcs.clj"))` shall return:
+
+```clojure
+("The Ivory Gate of Dreams (No Exit, 1989)")
+```
+
+TODO: Solution
