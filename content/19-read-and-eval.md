@@ -76,14 +76,22 @@ Write a function `songs-from-file` that expects a path as parameter
 and returns a vector of songs.
 
 Hint: Use `slurp` to read the data. Use `clojure.string/split-lines`
-to separate the string into lines. Use `read` to turn the lines into
-data.
+to separate the string into lines. Use `read-string` to turn the lines
+into data.
 
 Test: `(count (songs-from-file "/tmp/songs.clj"))` shall return `14`.
 
-TODO: Solution
+{{% expand title="Solution" %}}
+```clojure
+(defn songs-from-file [path]
+  (let [raw (slurp path)
+        lines (clojure.string/split-lines raw)
+        songs (map read-string lines)]
+    (vec songs)))
+```
+{{% /expand %}}
 
-### Read Transformation Functions
+### Read Function Data
 
 Save the following code to disk, e.g. under `/tmp/funcs.clj`:
 
@@ -91,15 +99,26 @@ Save the following code to disk, e.g. under `/tmp/funcs.clj`:
 (with-meta (fn [s] (< (:year s) 1990)) {:kind :filter})
 (with-meta (fn [s] (clojure.string/includes? (:name s) "Dream")) {:kind :filter})
 (with-meta (fn [s] (= (:band s) "Fates Warning")) {:kind :filter})
-(with-meta (fn [s] (str (:name s) "(" (:album s) ", " (:year s) ")")) {:kind :mapper})
+(with-meta (fn [s] (str (:name s) " (" (:album s) ", " (:year s) ")")) {:kind :mapper})
 ```
 
 Write a function `funcs-from-file` that expects a path as parameter
 and returns a vector of functions.
 
+Hint: Use `comp` to combine `read-string` and `eval` into a single
+operation.
+
 Test: `(count (funcs-form-file "/tmp/funcs.clj"))` shall return 4.
 
-TODO: Solution
+{{% expand title="Solution" %}}
+```clojure
+(defn funcs-from-file [path]
+  (let [raw (slurp path)
+        lines (clojure.string/split-lines raw)
+        funcs (map (comp eval read-string) lines)]
+    (vec funcs)))
+```
+{{% /expand %}}
 
 ### Song Processing Pipeline
 
@@ -114,11 +133,26 @@ shall be executed as a predicate to `filter`; if it is of the kind
 Hint: Use the `meta` function to access the metadata of the pipeline
 function.
 
-Test: `(run-pipelien (songs-from-file "/tmp/songs.clj")
+Test: `(run-pipeline (songs-from-file "/tmp/songs.clj")
 (funcs-from-file "/tmp/funcs.clj"))` shall return:
 
 ```clojure
 ("The Ivory Gate of Dreams (No Exit, 1989)")
 ```
 
-TODO: Solution
+{{% expand title="Solution" %}}
+```clojure
+(defn run-pipeline [songs funcs]
+  (loop [result songs
+         funcs funcs]
+    (if (empty? funcs)
+      result
+      (let [f (first funcs)
+            kind (:kind (meta f))
+            fs (rest funcs)]
+        (case kind
+          :filter (recur (filter f result) fs)
+          :mapper (recur (map f result) fs)
+          (recur result fs))))))
+```
+{{% /expand %}}
