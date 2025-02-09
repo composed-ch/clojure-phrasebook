@@ -66,6 +66,8 @@ including (`case`, `cond`, etc.).
 
 ## Exercises
 
+### Unless
+
 Write a macro `unless` that accepts both a condition and some code,
 and, unlike `when`, only executes the code if the condition does _not_
 hold true.
@@ -79,6 +81,49 @@ Test: `(unless (> 1 0) "math is not broken")` shall return `nil`, and
 ```clojure
 (defmacro unless [cond code]
   `(when (not ~cond)
+     ~code))
+```
+{{% /expand %}}
+
+### Arithmetic If
+
+Write a macro `arithmetic-if` that expects an integer `n`, and three
+code parameters `pos`, `zero`, and `neg`, which are to be executed if
+`n` is positive, zero, or negative, respectively.
+
+Hint: Write a template using `cond`.
+
+Test: `(arithmetic-if 3 :+ :0 :-)` shall return `:+`, `(arithmetic-if
+0 :+ :0 :-)` shall return `:0`, and `(arithmetic-if -7 :+ :0 :-)`
+shall return `:-`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defmacro arithmetic-if [n pos zero neg]
+  `(cond
+     (> ~n 0) ~pos
+     (= ~n 0) ~zero
+     :else ~neg))
+```
+{{% /expand %}}
+
+### Maybe
+
+Write a macro `maybe` that expects two parameters: `code` to be
+executed, and a probability `p` of execution. The higher the
+probability, the more likely the code is executed.
+
+Hint: Use `rand` to generate a random number between `0.0` and
+`1.0`. Execute the code if the random number is smaller than or equal
+to the given probability.
+
+Test: `(maybe (println "*") 0.9)` should more likely output a `*`
+character than `(maybe (print "*") 0.1)`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defmacro maybe [code p]
+  `(when (<= (rand) ~p)
      ~code))
 ```
 {{% /expand %}}

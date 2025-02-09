@@ -2,8 +2,6 @@
 title = "Clojure Phrasebook"
 +++
 
-**Work in Progress (19/20 Chapters)**
-
 The _Clojure Phrasebook_ is a terse summary of [Getting
 Clojure](https://pragprog.com/titles/roclojure/getting-clojure/) by Russ Olsen
 with additional exercises and solutions. A basic understanding of functional
