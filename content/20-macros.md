@@ -63,3 +63,22 @@ Expand a macro to inspect the generated code:
 Notice that `macroexpand-1` expands macros _once_. The `macroexpand`
 function expands the code recursively until all macros are expanded,
 including (`case`, `cond`, etc.).
+
+## Exercises
+
+Write a macro `unless` that accepts both a condition and some code,
+and, unlike `when`, only executes the code if the condition does _not_
+hold true.
+
+Hint: Define the macro in terms of `when` and `not`.
+
+Test: `(unless (> 1 0) "math is not broken")` shall return `nil`, and
+`(unless (> 0 1) "math is ok")` shall return `"math is ok"`.
+
+{{% expand title="Solution" %}}
+```clojure
+(defmacro unless [cond code]
+  `(when (not ~cond)
+     ~code))
+```
+{{% /expand %}}
