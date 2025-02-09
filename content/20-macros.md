@@ -5,7 +5,8 @@ weight = 20
 
 > [!IMPORTANT]
 >
-> Macros extend the language. If a problem can be solved without macros, don't use them!
+> Macros extend the language. Only use them if the problem cannot be solved
+> with other language constructs.
 
 Considering repetitive code for a three-start rating system:
 
