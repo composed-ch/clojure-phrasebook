@@ -6,7 +6,6 @@ title = 'Clojure Phrasebook'
 minifyOutput = true
 
 [params]
-math = false
 openapi = false
 showVisitedLinks = true
 themeVariant = 'blue'
